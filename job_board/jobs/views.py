@@ -1,10 +1,11 @@
-from rest_framework import viewsets
+from rest_framework import generics
 from .models import Job
 from .serializers import JobSerializer
 
-class JobViewSet(viewsets.ModelViewSet):
-    """
-    A viewset for viewing and editing job instances.
-    """
-    serializer_class = JobSerializer
+class JobListCreateAPIView(generics.ListCreateAPIView):
     queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+class JobDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
