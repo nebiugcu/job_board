@@ -70,7 +70,7 @@ const NavBar = () => {
     <div className=" bg-[#22577A] py-2 mb-10">
       <div className="flex w-full px-3 md:w-[80%] mx-auto justify-between items-center text-white">
         <div className="text-2xl font-bold font-mono">
-          <Link to="/">Carrer Catalysts</Link>
+          <Link to="/">Career Catalyst</Link>
         </div>
         {userData ? (
           userData.isLoggedIn ? (

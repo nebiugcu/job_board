@@ -33,7 +33,7 @@ const Register = () => {
                 value="default"
                 id="r1"
               />
-              <Label htmlFor="r1">Freelancer</Label>
+              <Label htmlFor="r1">Job Seeker</Label>
             </div>
             <img
               className="object-cover w-[90%] mt-3"
@@ -56,7 +56,7 @@ const Register = () => {
                 value="comfortable"
                 id="r2"
               />
-              <Label htmlFor="r2">Client</Label>
+              <Label htmlFor="r2">Employer</Label>
             </div>
             <img className="object-cover w-[90%] mt-3" src={ClientImg} alt="" />
           </div>
