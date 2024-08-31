@@ -1,27 +1,20 @@
 from django.db import models
-from authentication.models import User
+from authentication.models import Employer
 
 
 class Job(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    company_name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100)
-    employment_type = models.CharField(
-        max_length=50,
-        choices=[
-            ('FT', 'Full-Time'),
-            ('PT', 'Part-Time'),
-            ('CT', 'Contract'),
-            ('IN', 'Internship'),
-            ('TP', 'Temporary')
-        ]
-    )
-    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    date_posted = models.DateTimeField(auto_now_add=True)
-    application_deadline = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    employer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs', default=3)
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
+    job_title = models.CharField(max_length=255)
+    job_type = models.CharField(max_length=50, choices=[('full time', 'Full Time'), ('part time', 'Part Time'), ('freelance', 'Freelance')])
+    applicants_needed = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')])
+    job_description = models.TextField()
+    job_category = models.CharField(max_length=100)
+    job_site = models.CharField(max_length=255)
+    application_deadline = models.DateField()
+    experience_level = models.CharField(max_length=50, choices=[('expert', 'Expert'), ('senior', 'Senior'), ('intermediate', 'Intermediate'), ('junior', 'Junior'), ('entry', 'Entry')])
+    created_at = models.DateTimeField(auto_now_add=True)
+    salary = models.CharField(max_length=255, null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.title

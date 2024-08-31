@@ -1,5 +1,6 @@
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,7 @@ const Login = () => {
     isClient: null,
   });
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     setUserLoginInfo({ ...userLoginInfo, [e.target.name]: e.target.value });
   };
@@ -22,17 +24,25 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:8800/api/auth/login", userLoginInfo)
-      .then((res) => {
-        const userData = res.data;
-        navigate("/", { state: { userData } });
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err.response);
-        alert("Login Failed, check your credentials and try again.");
+    try {
+      const res = await api.post("/api/token", {
+        email: userLoginInfo.email,
+        password: userLoginInfo.password,
       });
+      localStorage.setItem(ACCESS_TOKEN, res.data.access);
+      localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+      if (userLoginInfo.isClient) {
+        navigate("/posts", { state: { isLoggedIn: true, isClient: true } });
+      }
+      if (userLoginInfo.isClient === false) {
+        navigate("/jobs", { state: { isLoggedIn: true, isClient: false } });
+      }
+      console.log("success");
+      alert("success");
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
   };
 
   return (
@@ -86,7 +96,7 @@ const Login = () => {
                     onChange={handleOptionChange}
                     id="client"
                   />
-                  <label htmlFor="client">Client</label>
+                  <label htmlFor="client">Employer</label>
                 </div>
                 <div className="flex gap-x-2">
                   <input
@@ -97,7 +107,7 @@ const Login = () => {
                     onChange={handleOptionChange}
                     id="freelancer"
                   />
-                  <label htmlFor="freelancer">Freelancer</label>
+                  <label htmlFor="freelancer">Job Seeker</label>
                 </div>
               </div>
 

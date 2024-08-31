@@ -35,6 +35,11 @@ function App() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  function RegisterAndLogout() {
+    localStorage.clear()
+    return <Register />
+  }
   const Layout = () => {
     return (
       <>
@@ -67,7 +72,7 @@ function App() {
         },
         {
           path: "/register",
-          element: <Register />,
+          element: <RegisterAndLogout />,
         },
         {
           path: "/profile",

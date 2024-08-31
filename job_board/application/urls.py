@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import  ApplicationListCreateAPIView, ApplicationDetailAPIView
+from .views import  ApplicationView, ApplicationDetailView, HireView, HireDetailView
 
 urlpatterns = [
-    path('', ApplicationListCreateAPIView.as_view(), name='application-list-create'),
-    path('<int:pk>/', ApplicationDetailAPIView.as_view(), name='application-detail'),
+    path('api/applications/', ApplicationView.as_view(), name='application-list-create'),
+    path('api/applications/<int:pk>/', ApplicationDetailView.as_view(), name='application-detail'),
+    path('api/hires/', HireView.as_view(), name='hire_list'),
+    path('api/hires/<int:pk>/', HireDetailView.as_view(), name='hire_detail'),
 
 ]

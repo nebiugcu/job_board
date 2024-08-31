@@ -11,16 +11,16 @@ const NavBar = () => {
   const profileRef = useRef(null);
   // const currentUser = undefined;
 
-  axios.defaults.withCredentials = true;
-  useEffect(() => {
-    axios
-      .get("http://localhost:8800/check")
-      .then((res) => {
-        console.log(res.data);
-        setUserData(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  // axios.defaults.withCredentials = true;
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8800/check")
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setUserData(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   useEffect(() => {
     window.addEventListener("mousedown", (event) => {

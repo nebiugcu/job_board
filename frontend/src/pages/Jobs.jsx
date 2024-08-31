@@ -81,15 +81,58 @@ const Jobs = () => {
       <div className="flex gap-x-14 px-10 justify-center">
         {/* Filtering sidebar */}
         <div
-          style={{
-            backgroundImage: `url(${backImg})`,
-            backgroundPosition: "10% 0%",
-            backgroundSize: "700px",
-          }}
+          // style={{
+          //   backgroundImage: `url(${backImg})`,
+          //   backgroundPosition: "10% 0%",
+          //   backgroundSize: "700px",
+          // }}
           className="w-[20%] h-[800px] p-5 shadow-md shadow-slate-500 rounded-lg"
         >
-          <div className="font-semibold font-mono text-3xl mt-10 text-white">
+          <div className="font-semibold font-mono text-3xl mt-10 text-black">
             Search For Jobs based on your interest.
+          </div>
+          <div>
+            <div className="mt-10 text-2xl font-mono font-bold pt-4 border-t-8 mb-2">
+              Helpful Resources
+            </div>
+            <div className="flex flex-col gap-y-5">
+              <p>
+                <a
+                  className="text-blue-500 text-xl"
+                  href="https://www.linkedin.com/interview-prep/"
+                  target="_blank"
+                >
+                  Interview Preparation
+                </a>
+              </p>
+              <p>
+                <a
+                  className="text-blue-500 text-xl"
+                  href="https://www.canva.com/resume/templates/"
+                  target="_blank"
+                >
+                  Resume Building
+                </a>
+              </p>
+              <p>
+                <a
+                  className="text-blue-500 text-xl"
+                  href="https://www.careeronestop.org/JobSearch/Plan/career-counselor.aspx"
+                  target="_blank"
+                >
+                  Career Counseling
+                </a>
+              </p>
+              <p>
+                <a
+                  className="text-blue-500 text-xl"
+                  href="https://www.coursera.org/browse/personal-development"
+                  target="_blank"
+                >
+                  Skills Development Courses
+                </a>
+              </p>
+            </div>
           </div>
           {/* Filter and clear buttons */}
           {/* <div>
