@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,25 +18,25 @@ const Jobs = () => {
   const [displayBtn, setDisplayBtn] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const freelancerId = userData
-    ? userData.isLoggedIn && userData.userInfo.userData.Freelancer_ID
-    : null;
-  const isLoggedIn = userData ? (userData.isLoggedIn ? true : false) : false;
-  console.log(freelancerId);
+  // const freelancerId = userData
+  //   ? userData.isLoggedIn && userData.userInfo.userData.Freelancer_ID
+  //   : null;
+  // const isLoggedIn = userData ? (userData.isLoggedIn ? true : false) : false;
+  // console.log(freelancerId);
 
-  axios.defaults.withCredentials = true;
+  // axios.defaults.withCredentials = true;
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8800/check")
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setUserData(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
   useEffect(() => {
-    axios
-      .get("http://localhost:8800/check")
-      .then((res) => {
-        console.log(res.data);
-        setUserData(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-  useEffect(() => {
-    axios
-      .get("http://localhost:8800/api/job/all-jobs")
+    api
+      .get("/jobs/")
       .then((res) => {
         console.log(res.data);
         setAllJobs(res.data);
@@ -370,21 +371,21 @@ const Jobs = () => {
                 return (
                   <div key={index}>
                     <Job
-                      jobTitle={job.Job_Title}
-                      clientName={job.Username}
-                      postedAt={job.Created_at}
-                      locatedAt={job.Location}
-                      jobDescription={job.Job_Description}
-                      jobCategory={job.Job_Category}
-                      jobSite={job.Job_Site}
-                      jobType={job.Job_Type}
-                      salary={job.Salary}
-                      experience={job.Experience_Level}
-                      deadline={job.Application_Deadline}
-                      jobId={job.Job_ID}
-                      freelancerId={freelancerId}
-                      isLoggedIn={isLoggedIn}
-                      gender={job.Applicants_Needed}
+                      jobTitle={job.job_title}
+                      clientName={job.id}
+                      postedAt={job.created_at}
+                      locatedAt={job.location}
+                      jobDescription={job.job_description}
+                      jobCategory={job.job_category}
+                      jobSite={job.job_site}
+                      jobType={job.job_type}
+                      salary={job.salary}
+                      experience={job.experience_level}
+                      deadline={job.application_deadline}
+                      jobId={job.id}
+                      // freelancerId={freelancerId}
+                      // isLoggedIn={isLoggedIn}
+                      gender={job.applicants_needed}
                     />
                   </div>
                 );

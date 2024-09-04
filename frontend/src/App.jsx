@@ -22,6 +22,7 @@ import PostJob from "./pages/PostJob";
 import { useEffect, useState } from "react";
 import ActiveJobs from "./pages/ActiveJobs";
 import Contracts from "./pages/Contracts";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const [userInfo, setUserInfo] = useState(null);
@@ -37,8 +38,8 @@ function App() {
   }, []);
 
   function RegisterAndLogout() {
-    localStorage.clear()
-    return <Register />
+    localStorage.clear();
+    return <Register />;
   }
   const Layout = () => {
     return (
@@ -88,7 +89,11 @@ function App() {
         },
         {
           path: "/postjob",
-          element: <PostJob />,
+          element: (
+            <ProtectedRoute>
+              <PostJob />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/messages",

@@ -23,7 +23,6 @@ urlpatterns = [
     path('', include('jobs.urls')),
     path('', include('application.urls')),
     path('', include("authentication.urls")),
-    path("api/token", TokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
     path('', include('application.urls'))

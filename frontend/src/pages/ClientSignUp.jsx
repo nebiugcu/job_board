@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import api from "../api";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,16 +53,16 @@ const ClientSignup = () => {
       return;
     }
     const data = new FormData();
-    data.append("firstname", firstname);
-    data.append("lastname", lastname);
-    data.append("username", username);
-    data.append("email", email);
-    data.append("password", password);
-    data.append("clientType", clientType);
+    data.append("user.first_name", firstname);
+    data.append("user.last_name", lastname);
+    data.append("user.username", username);
+    data.append("user.email", email);
+    data.append("user.password", password);
+    data.append("client_type", clientType);
     data.append("profile-pic", profilePic);
     // api/auth/client-register
-    axios
-      .post("http://localhost:8800/api/auth/client-register", data)
+    api
+      .post("/api/register/employer/", data)
       .then((res) => {
         console.log(res.data);
         navigate("/login");
@@ -69,6 +70,7 @@ const ClientSignup = () => {
       .catch((error) => {
         console.log(error);
         alert(error.response.data.msg);
+        console.log(data);
       });
     console.log(data);
   };

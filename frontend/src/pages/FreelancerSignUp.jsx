@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import api from "../api";
 import {
   Select,
   SelectContent,
@@ -63,18 +64,19 @@ const FreelancerSignUp = () => {
       return;
     }
     const data = new FormData();
-    data.append("firstname", firstname);
-    data.append("lastname", lastname);
-    data.append("username", username);
-    data.append("email", email);
-    data.append("password", password);
+    data.append("user.first_name", firstname);
+    data.append("user.last_name", lastname);
+    data.append("user.username", username);
+    data.append("user.email", email);
+    data.append("user.password", password);
     data.append("profession", profession);
     data.append("bio", bio);
-    data.append("files", profilePic);
-    data.append("files", resume);
+    data.append("profile_picture", profilePic);
+    data.append("resume", resume);
     // api/auth/freelancer-register
-    axios
-      .post("http://localhost:8800/api/auth/freelancer-register", data)
+    axios.defaults.withCredentials = true;
+    api
+      .post("/api/register/jobseeker/", data)
       .then((res) => {
         console.log(res.data);
         navigate("/login");

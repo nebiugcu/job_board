@@ -2,6 +2,7 @@ import Job from "@/components/ClientJob";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 const Posts = () => {
   const [allClientJobs, setAllClientJobs] = useState([]);
@@ -31,8 +32,8 @@ const Posts = () => {
       .catch((err) => console.log(err));
   }, []);
   useEffect(() => {
-    axios
-      .get(`http://localhost:8800/api/job/client-jobs/${clientId}`)
+    api
+      .get(`/employer/jobs/`)
       .then((res) => {
         console.log(res.data);
         setAllClientJobs(res.data);
@@ -54,19 +55,19 @@ const Posts = () => {
               return (
                 <div key={index}>
                   <Job
-                    jobTitle={job.Job_Title}
-                    clientName={clientName}
-                    postedAt={job.Created_at}
-                    locatedAt={job.Location}
-                    jobDescription={job.Job_Description}
-                    jobCategory={job.Job_Category}
-                    jobSite={job.Job_Site}
-                    jobType={job.Job_Type}
-                    salary={job.Salary}
-                    experience={job.Experience_Level}
-                    deadline={job.Application_Deadline}
-                    jobId={job.Job_ID}
-                    gender={job.Applicants_Needed}
+                    jobTitle={job.job_title}
+                    clientName={job.id}
+                    postedAt={job.created_at}
+                    locatedAt={job.location}
+                    jobDescription={job.job_description}
+                    jobCategory={job.job_category}
+                    jobSite={job.job_site}
+                    jobType={job.job_type}
+                    salary={job.salary}
+                    experience={job.experience_level}
+                    deadline={job.application_deadline}
+                    jobId={job.id}
+                    gender={job.applicants_needed}
                   />
                 </div>
               );

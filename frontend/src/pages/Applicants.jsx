@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import Applicant from "@/components/Applicant";
 
@@ -24,8 +25,8 @@ const Applicants = () => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8800/api/apply/get-job-applicants/${jobId}`)
+    api
+      .get(`/employer/applications/${jobId}/`)
       .then((res) => {
         console.log(res.data);
         setJobApplicants(res.data);
@@ -42,19 +43,19 @@ const Applicants = () => {
           return (
             <div key={index}>
               <Applicant
-                applicationId={applicant.Application_ID}
+                applicationId={applicant.id}
                 applicationStatus={applicant.status}
                 freelancerId={applicant.Freelancer_ID}
                 freelancerFirstName={applicant.FirstName}
                 freelancerLastName={applicant.LastName}
                 profession={applicant.Proffession}
                 profilePic={applicant.Profile_Picture}
-                coverLetter={applicant.Cover_Letter}
-                jobTitle={applicant.Job_Title}
+                coverLetter={applicant.cover_letter}
+                jobTitle={applicant.job_title}
                 email={applicant.Email}
                 username={applicant.Username}
                 bio={applicant.Bio}
-                resume={applicant.Resume}
+                resume={applicant.resume}
               />
             </div>
           );

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import api from "../api";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -49,31 +50,35 @@ const Job = ({
   };
 
   const goToApplication = (job) => {
-    if (!isLoggedIn) {
-      navigate("/login");
-      return;
-    }
-    const data = {
-      jobId: jobId,
-      freelancerId: freelancerId,
-    };
-    if (applicationDatePassed()) {
-      alert("Sorry, Application date has passed!!");
-    } else {
-      axios
-        .post(`http://localhost:8800/api/apply/check-applicant`, data)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.isApplied) {
-            alert("You have already applied to this job");
-          } else {
-            navigate("/application", { state: { job: job } });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    console.log("access job data first");
+    console.log(job);
+    console.log("access job data end");
+    // if (!isLoggedIn) {
+    //   navigate("/login");
+    //   return;
+    // }
+    // const data = {
+    //   jobId: jobId,
+    //   freelancerId: freelancerId,
+    // };
+    // if (applicationDatePassed()) {
+    //   alert("Sorry, Application date has passed!!");
+    // } else {
+    //   axios
+    //     .post(`http://localhost:8800/api/apply/check-applicant`, data)
+    //     .then((res) => {
+    //       console.log(res.data);
+    //       if (res.data.isApplied) {
+    //         alert("You have already applied to this job");
+    //       } else {
+    //         navigate("/application", { state: { job: job } });
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
+    navigate("/application", { state: job });
   };
   // const location = useLocation();
   // console.log(location);

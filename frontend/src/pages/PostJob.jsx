@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../api";
+import { ACCESS_TOKEN } from "../constants";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,18 +26,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const PostJob = () => {
+const PostJob = ({ userInfo }) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [jobData, setJobData] = useState({
     job_title: "",
     job_type: "",
-    applicant_needed: "",
-    job_desc: "",
-    job_cat: "",
+    applicants_needed: "",
+    job_description: "",
+    job_category: "",
     job_site: "",
-    deadline: "",
-    experience: "",
+    application_deadline: "",
+    experience_level: "",
     salary: "",
     location: "",
   });
@@ -45,7 +47,6 @@ const PostJob = () => {
     : null;
 
   const sentJobData = {
-    client_id: clientId,
     ...jobData,
   };
 
@@ -78,7 +79,7 @@ const PostJob = () => {
 
     setJobData((prevFormData) => ({
       ...prevFormData,
-      applicant_needed: gender,
+      applicants_needed: gender,
     }));
   };
   axios.defaults.withCredentials = true;
@@ -99,8 +100,9 @@ const PostJob = () => {
     e.preventDefault();
     console.log("dhdk");
     console.log(sentJobData);
-    axios
-      .post("http://localhost:8800/api/job/post-job", sentJobData)
+    console.log(userInfo);
+    api
+      .post("/api/jobs/", sentJobData)
       .then((res) => {
         console.log(res.data);
         navigate("/posts");
@@ -206,7 +208,7 @@ const PostJob = () => {
                   Job Description
                 </Label>
                 <Textarea
-                  name="job_desc"
+                  name="job_description"
                   onChange={handleChange}
                   placeholder="Type your message here."
                 />
@@ -217,7 +219,7 @@ const PostJob = () => {
                 </Label>
                 <Select
                   onValueChange={(value) => {
-                    setJobData({ ...jobData, job_cat: value });
+                    setJobData({ ...jobData, job_category: value });
                   }}
                 >
                   <SelectTrigger className="w-[70%]">
@@ -284,7 +286,10 @@ const PostJob = () => {
                   <Input
                     type="date"
                     onChange={(e) => {
-                      setJobData({ ...jobData, deadline: e.target.value });
+                      setJobData({
+                        ...jobData,
+                        application_deadline: e.target.value,
+                      });
                     }}
                     id="date"
                     placeholder="Email"
@@ -297,7 +302,7 @@ const PostJob = () => {
                 </Label>
                 <Select
                   onValueChange={(value) => {
-                    setJobData({ ...jobData, experience: value });
+                    setJobData({ ...jobData, experience_level: value });
                   }}
                 >
                   <SelectTrigger className="w-[70%]">

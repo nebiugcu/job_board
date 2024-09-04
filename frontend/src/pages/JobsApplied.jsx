@@ -1,6 +1,7 @@
 import SingleApplied from "@/components/SingleApplied";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 
 const JobsApplied = () => {
@@ -24,18 +25,17 @@ const JobsApplied = () => {
   }, []);
 
   useEffect(() => {
-    if (freelancerId) {
-      axios
-        .get(`http://localhost:8800/api/apply/get-applications/${freelancerId}`)
-        .then((res) => {
-          console.log(res.data);
-          setJobsApplied(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [freelancerId]);
+    console.log("trying to see freelancer jobs");
+    api
+      .get(`/applications/`)
+      .then((res) => {
+        console.log(res.data);
+        setJobsApplied(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div className="flex flex-col min-h-[70vh]">
@@ -44,10 +44,10 @@ const JobsApplied = () => {
           return (
             <div key={index}>
               <SingleApplied
-                jobTitle={job.Job_Title}
-                clientName={job.Username}
-                coverLetter={job.Cover_Letter}
-                applicationId={job.Application_ID}
+                jobTitle={job.job_title}
+                clientName={job.employer_name}
+                coverLetter={job.cover_letter}
+                applicationId={job.id}
                 status={job.status}
               />
             </div>

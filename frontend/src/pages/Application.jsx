@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import api from "../api";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ArrowLeft } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
@@ -11,30 +14,41 @@ const Application = () => {
   const [userInfo, setUserInfo] = useState(null);
   const location = useLocation();
   const [coverLetter, setCoverLetter] = useState("");
-  const { job } = location.state || {};
+  const [resume, setResume] = useState(null);
+  const job = location.state || {};
   const applicationInfo = {
-    jobId: job.jobId,
-    freelancerId: userInfo
-      ? userInfo.isLoggedIn && userInfo.userInfo.userData.Freelancer_ID
-      : "",
-    jobCoverLetter: coverLetter,
+    job_id: job.jobId,
+    cover_letter: coverLetter,
+    resume: resume,
   };
-
-  axios.defaults.withCredentials = true;
   useEffect(() => {
-    axios
-      .get("http://localhost:8800/check")
-      .then((res) => {
-        console.log(res.data);
-        setUserInfo(res.data);
-      })
-      .catch((err) => console.log(err));
+    console.log(job);
+    console.log("trying to get job info from application page");
   }, []);
 
+  // axios.defaults.withCredentials = true;
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8800/check")
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setUserInfo(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  const onChange = (e) => {
+    setResume(e.target.files[0]);
+  };
+
   const submitHandler = () => {
+    const formData = new FormData();
+    formData.append("job", applicationInfo.job_id);
+    formData.append("cover_letter", applicationInfo.cover_letter);
+    formData.append("resume", applicationInfo.resume);
     console.log(applicationInfo);
-    axios
-      .post("http://localhost:8800/api/apply/apply-to-job", applicationInfo)
+    api
+      .post("/api/applications/", formData)
       .then((res) => {
         console.log(res.data);
         navigate("/applications");
@@ -53,6 +67,7 @@ const Application = () => {
             <p className="text-4xl font-bold mb-3">{job.jobTitle}</p>
             <div className="flex gap-x-4">
               <p className=" bg-slate-200 py-1 px-3 rounded-full shadow-sm shadow-slate-500">
+                {" "}
                 {job.jobCategory}
               </p>
               <p className=" bg-slate-200 py-1 px-3 rounded-full shadow-sm shadow-slate-500">
@@ -90,6 +105,10 @@ const Application = () => {
               }}
               placeholder="Type your message here."
             />
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="cv">Upload Resume or CV</Label>
+              <Input name="resume" id="cv" onChange={onChange} type="file" />
+            </div>
             <div className=" mt-4 flex justify-between">
               <span className="hover:text-[#57CC99] cursor-pointer">
                 <Link to="/jobs">

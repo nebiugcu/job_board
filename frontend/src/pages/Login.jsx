@@ -33,9 +33,11 @@ const Login = () => {
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
       if (userLoginInfo.isClient) {
         navigate("/posts", { state: { isLoggedIn: true, isClient: true } });
+        window.location.reload();
       }
       if (userLoginInfo.isClient === false) {
         navigate("/jobs", { state: { isLoggedIn: true, isClient: false } });
+        window.location.reload();
       }
       console.log("success");
       alert("success");
