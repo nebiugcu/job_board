@@ -152,7 +152,7 @@ const FreelancerSignUp = () => {
               </div>
               <div className="w-full flex flex-col gap-y-1">
                 <Label className="text-base" htmlFor="">
-                  Select your proffession:
+                  Select your profession:
                 </Label>
                 <Select
                   name="profession"
@@ -165,10 +165,11 @@ const FreelancerSignUp = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Proffessions</SelectLabel>
+                      <SelectLabel>Profession</SelectLabel>
                       <SelectItem value="graphic designer">
                         Graphic Designer
                       </SelectItem>
+                      <SelectItem value="software engineer">Software Engineer</SelectItem>
                       <SelectItem value="photography">Photographer</SelectItem>
                       <SelectItem value="social media manager">
                         Social Media Manager
