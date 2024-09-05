@@ -17,4 +17,4 @@ class Job(models.Model):
     location = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.job_title

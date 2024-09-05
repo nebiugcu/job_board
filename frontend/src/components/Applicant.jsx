@@ -172,7 +172,7 @@ const Applicant = ({
           <div>
             <a
               className="flex items-center gap-x-2 my-3"
-              href={`http://localhost:8800/images/${resume}`}
+              href={`${resume}`}
               target="_blank"
               download="myfile.pdf"
             >
@@ -207,9 +207,9 @@ const Applicant = ({
               <div>Rejected</div>
             )}
 
-            <Button onClick={handleMessagePort} className=" bg-blue-500">
+            {/* <Button onClick={handleMessagePort} className=" bg-blue-500">
               Message
-            </Button>
+            </Button> */}
           </div>
           {applicationStatus === "applied" && (
             <Button onClick={handleApplicationReject} className=" bg-red-500">

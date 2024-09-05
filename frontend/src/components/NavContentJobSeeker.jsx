@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
-import Img from "../assets/3407044.jpg";
 
-const NavContentJobSeeker = ({ userInfo }) => {
+const api_url = import.meta.env.VITE_API_URL;
+
+const NavContentJobSeeker = ({ username, profile_pic }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -23,17 +24,9 @@ const NavContentJobSeeker = ({ userInfo }) => {
   }, [profileRef]);
 
   const handleLogout = async () => {
-    axios
-      .post("http://localhost:8800/logout")
-      .then((res) => {
-        if (res.status === 200) {
-          navigate("/login");
-          window.location.reload();
-        }
-      })
-      .catch((err) => {
-        console.log("Error logging out: ", err);
-      });
+    localStorage.clear();
+    navigate("/login");
+    window.location.reload();
   };
   return (
     <>
@@ -46,9 +39,9 @@ const NavContentJobSeeker = ({ userInfo }) => {
             <li>
               <Link to="/applications">Applications</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/messages">Messages</Link>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div>
@@ -59,18 +52,18 @@ const NavContentJobSeeker = ({ userInfo }) => {
               }}
               className="cursor-pointer"
             >
-              <AvatarImage src={Img} />
+              <AvatarImage src={`${api_url}${profile_pic}`} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-              <span className=" text-lg font-bold">someone</span>
+              <span className=" text-lg font-bold">{username}</span>
             </div>
             {profileOpen && (
               <div
                 ref={profileRef}
                 className=" bg-[#3d7b4c] z-30 absolute top-[45px] right-0 text-slate-300 w-[150px] flex flex-col py-3 px-2 rounded-[7px]"
               >
-                <span
+                {/* <span
                   onClick={() => {
                     setProfileOpen(false);
                   }}
@@ -83,17 +76,7 @@ const NavContentJobSeeker = ({ userInfo }) => {
                   }}
                 >
                   <Link to="/contracts">My Contracts</Link>
-                </span>
-
-                <span
-                  onClick={() => {
-                    setProfileOpen(false);
-                  }}
-                >
-                  <button onClick={handleLogout} to="/login">
-                    Log out
-                  </button>
-                </span>
+                </span> */}
 
                 <span
                   onClick={() => {

@@ -12,7 +12,7 @@ class Application(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return self.job_seeker
 
 class Hire(models.Model):
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
@@ -22,4 +22,7 @@ class Hire(models.Model):
     completed_date = models.DateTimeField(null=True, blank=True)
     rating = models.IntegerField(null=True, blank=True)
     is_completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.employer
 

@@ -34,13 +34,14 @@ const Login = () => {
       if (userLoginInfo.isClient) {
         navigate("/posts", { state: { isLoggedIn: true, isClient: true } });
         window.location.reload();
+        alert("success");
       }
       if (userLoginInfo.isClient === false) {
         navigate("/jobs", { state: { isLoggedIn: true, isClient: false } });
         window.location.reload();
+        alert("success");
       }
       console.log("success");
-      alert("success");
     } catch (error) {
       alert(error);
       console.log(error);

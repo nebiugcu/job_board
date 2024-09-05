@@ -81,14 +81,14 @@ const SingleApplied = ({
         </div>
         <div className="flex justify-between items-center mt-4">
           <div className="flex gap-x-5">
-            <Button
+            {/* <Button
               onClick={() => {
                 navigate("/messages");
               }}
               className=" bg-blue-500"
             >
               Message
-            </Button>
+            </Button> */}
           </div>
           <Button onClick={deleteHandler} className=" bg-red-500">
             Delete Application

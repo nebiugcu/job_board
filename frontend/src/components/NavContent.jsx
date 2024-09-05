@@ -9,7 +9,7 @@ const NavContent = ({ userInfo }) => {
   }, []);
   return (
     <div>
-      {userInfo.is_employer ? <NavContentEmployer /> : <NavContentJobSeeker />}
+      {userInfo.is_employer ? <NavContentEmployer username={userInfo.name} profile_pic={userInfo.profile_picture} /> : <NavContentJobSeeker username={userInfo.name} profile_pic={userInfo.profile_picture} />}
     </div>
   );
 };
