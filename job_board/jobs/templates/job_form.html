@@ -1,0 +1,9 @@
+<form method="post" action="{% url 'predict_job_match' %}">
+    {% csrf_token %}
+    <label for="feature_1">Feature 1:</label>
+    <input type="text" name="feature_1" id="feature_1">
+    <label for="feature_2">Feature 2:</label>
+    <input type="text" name="feature_2" id="feature_2">
+    <!-- Add more input fields as needed -->
+    <button type="submit">Get Recommendations</button>
+</form>

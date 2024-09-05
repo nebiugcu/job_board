@@ -1,0 +1,6 @@
+<h2>Recommended Jobs</h2>
+<ul>
+    {% for job in jobs %}
+        <li>{{ job.title }} - {{ job.location }}</li>
+    {% endfor %}
+</ul>
