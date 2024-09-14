@@ -123,6 +123,7 @@ def job_recommendations_view(request):
     if request.method == 'POST':
         form = CandidateProfileForm(request.POST)
         if form.is_valid():
+            # Create the candidate profile based on the submitted form
             candidate_profile = {
                 'desired_titles': form.cleaned_data['desired_titles'].split(','),
                 'preferred_location': form.cleaned_data['preferred_location'],
@@ -131,17 +132,18 @@ def job_recommendations_view(request):
                 'skills': form.cleaned_data['skills'].split(',')
             }
 
-            # Create an instance of the job recommendation command
-            job_recommender = JobRecommendationCommand()
-
             # Load and preprocess data
-            csv_path = r'E:\job_board\job_board\jobs\data\job_postings.csv'
-            df = job_recommender.load_and_preprocess_data(csv_path)
+            csv_path = r'C:\Users\nebiu\PycharmProjects\job_board\job_board\jobs\data\job_postings.csv'
+            df = pd.read_csv(csv_path)
 
-            # Get top 5 recommended jobs
-            recommended_jobs = job_recommender.recommend_top_jobs(df, top_n=5)
+            # Apply the job match score calculation based on user input
+            df['job_match_score'] = df.apply(lambda row: calculate_job_match(row, candidate_profile), axis=1)
 
-            context = {'recommended_jobs': recommended_jobs.to_dict('records')}
+            # Sort jobs by match score and get the top 5
+            recommended_jobs = df.sort_values(by='job_match_score', ascending=False).head(5)
+
+            # Prepare context for the template
+            context = {'recommended_jobs': recommended_jobs[['title', 'location', 'job_match_score']].to_dict('records')}
             return render(request, 'jobs/recommendations.html', context)
 
     else:
