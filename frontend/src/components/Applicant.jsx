@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../api";
 import { FileDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -28,6 +29,7 @@ const Applicant = ({
   coverLetter,
   jobTitle,
   username,
+  email,
   bio,
   resume,
 }) => {
@@ -79,24 +81,16 @@ const Applicant = ({
   const handleApplicantsHire = async () => {
     console.log(applicationId, clientId, freelancerId);
     const data = {
-      applicationId: applicationId,
-      clientId: clientId,
-      freelancerId: freelancerId,
+      application: applicationId,
     };
 
     try {
-      const response = await axios.post(
-        `http://localhost:8800/api/hire/hireApplicant`,
-        data
-      );
-      if (response.data.message == 1) {
-        navigate(0);
-      } else {
-        alert("oops! There might be a problem please try again");
-      }
+      const response = await api.post(`/api/hires/`, data);
+      console.log(response.data);
+      navigate(0);
     } catch (e) {
       alert("it looks like something is wrong!");
-      console.error(e.message);
+      console.error(e);
     }
   };
 
@@ -107,16 +101,12 @@ const Applicant = ({
     };
 
     try {
-      const response = await axios.post(
-        `http://localhost:8800/api/hire/rejectApplication`,
-        data
-      );
-      if (response.data.message == 1) {
-        navigate(0);
-      }
+      const response = await api.put(`/applications/reject/${applicationId}/`);
+      console.log(response.data);
+      navigate(0);
     } catch (e) {
       alert("it looks like something is wrong!");
-      console.error(e.message);
+      console.error(e);
     }
   };
   return (
@@ -125,7 +115,7 @@ const Applicant = ({
         <div className="flex justify-between">
           <div className="flex items-center gap-x-5">
             <Avatar>
-              <AvatarImage src={`http://localhost:8800/images/${profilePic}`} />
+              <AvatarImage src={`http://localhost:8000${profilePic}`} />
               <AvatarFallback>FN</AvatarFallback>
             </Avatar>
             <h2>
@@ -140,13 +130,14 @@ const Applicant = ({
               <HoverCardContent className="w-80">
                 <div className="flex space-x-6">
                   <Avatar>
-                    <AvatarImage
-                      src={`http://localhost:8800/images/${profilePic}`}
-                    />
+                    <AvatarImage src={`http://localhost:8000${profilePic}`} />
                     <AvatarFallback>VC</AvatarFallback>
                   </Avatar>
                   <div className="space-y-1">
                     <h4 className="text-sm font-semibold">@{username}</h4>
+                    <p className="text-sm">
+                      <span className="font-semibold">Email:</span> {email}
+                    </p>
                     <p className="text-sm">
                       <span className="font-semibold">Bio:</span> {bio}
                     </p>

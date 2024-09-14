@@ -80,22 +80,22 @@ const NavBar = () => {
           </ProtectedRoute>
         </div>
 
-        {location.pathname == "/" ||
+        {(location.pathname == "/" ||
           location.pathname == "/login" ||
-          (location.pathname == "/register" && (
-            <div className="flex justify-evenly gap-x-4 items-center">
-              <Link to="/login">
-                <button className="bg-green-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
-                  Login
-                </button>
-              </Link>
-              <Link to="/register">
-                <button className="bg-blue-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
-                  Register
-                </button>
-              </Link>
-            </div>
-          ))}
+          location.pathname == "/register") && (
+          <div className="flex justify-evenly gap-x-4 items-center">
+            <Link to="/login">
+              <button className="bg-green-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
+                Login
+              </button>
+            </Link>
+            <Link to="/register">
+              <button className="bg-blue-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
+                Register
+              </button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

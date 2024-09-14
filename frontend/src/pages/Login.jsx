@@ -4,7 +4,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import LoginImg from "@/assets/freelancer-login.png";
+import LoginImg from "@/assets/login.jpg";
 import { useState } from "react";
 
 const Login = () => {
@@ -132,7 +132,7 @@ const Login = () => {
         <img
           src={LoginImg}
           alt="Image"
-          className="h-full w-full relative bottom-0 object-contain"
+          className="h-full w-full relative -bottom-6 object-contain"
         />
       </div>
     </div>

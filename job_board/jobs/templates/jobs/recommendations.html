@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Recommendations</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/styles.css' %}"
+    />
+  </head>
+  <body>
+    <h1>Top Job Recommendations</h1>
+    <ul>
+      {% for job in recommended_jobs %}
+      <li>
+        {{ job.title }} - {{ job.location }} - Score: {{ job.job_match_score }}%
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

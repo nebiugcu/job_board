@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Accordion,
@@ -18,10 +19,8 @@ const SingleApplied = ({
 }) => {
   const navigate = useNavigate();
   const deleteHandler = async () => {
-    axios
-      .delete(
-        `http://localhost:8800/api/apply/delete-application/${applicationId}`
-      )
+    api
+      .delete(`/api/applications/${applicationId}/`)
       .then((res) => {
         console.log(res);
         window.location.reload();

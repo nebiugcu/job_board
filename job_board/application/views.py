@@ -1,4 +1,7 @@
 from rest_framework import generics, permissions
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Application, Hire
 from jobs.models import Job
 from authentication.models import JobSeeker
@@ -57,7 +60,8 @@ class ApplicationDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         # Ensure that only applications submitted by the authenticated job seeker can be accessed
-        return Application.objects.filter(job_seeker=self.request.user)
+        job_seeker_profile = self.request.user.job_seeker_profile  # Access the related JobSeeker instance
+        return Application.objects.filter(job_seeker=job_seeker_profile)
 
 class JobSeekerApplicationListView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
@@ -69,19 +73,50 @@ class JobSeekerApplicationListView(generics.ListAPIView):
         # Filter applications by the authenticated job seeker
         return Application.objects.filter(job_seeker=job_seeker)
 
+class RejectApplicationView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]  # Ensure user is authenticated
+    queryset = Application.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        # Fetch the application using the ID passed in the URL
+        application = get_object_or_404(Application, id=kwargs['pk'])
+
+        # Check if the authenticated user is the employer who posted the job
+        if application.job.employer != request.user.employer:
+            return Response({'error': 'Unauthorized to reject this application.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Update the status to 'rejected'
+        application.status = 'rejected'
+        application.save()
+
+        return Response({'message': 'Application has been rejected successfully.'}, status=status.HTTP_200_OK)
+
 class HireView(generics.ListCreateAPIView):
     queryset = Hire.objects.all()
     serializer_class = HireSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Automatically associate the hire with the authenticated employer and selected application
-        application = serializer.validated_data['application']
-        serializer.save(employer=self.request.user, job_seeker=application.job_seeker)
+        # Get the application from the validated data
+        application = serializer.validated_data.get('application')
+
+        # Check if the authenticated user is the employer who posted the job
+        if application.job.employer != self.request.user.employer:
+            raise serializers.ValidationError("Unauthorized to hire for this application.")
+
+        # Update the application's status to 'accepted'
+        application.status = 'accepted'
+        application.save()
+
+        # Automatically associate the hire with the authenticated employer and the job seeker from the application
+        serializer.save(
+            employer=self.request.user.employer,  # Set employer to the authenticated user
+            job_seeker=application.job_seeker     # Set job_seeker from the application
+        )
 
     def get_queryset(self):
         # Ensure that only hires related to the authenticated employer are shown
-        return Hire.objects.filter(employer=self.request.user)
+        return Hire.objects.filter(employer=self.request.user.employer)
 
 class HireDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Hire.objects.all()

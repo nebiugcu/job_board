@@ -29,6 +29,7 @@ const Applicants = () => {
       .get(`/employer/applications/${jobId}/`)
       .then((res) => {
         console.log(res.data);
+        console.log("listing applicants data");
         setJobApplicants(res.data);
       })
       .catch((error) => {
@@ -46,15 +47,15 @@ const Applicants = () => {
                 applicationId={applicant.id}
                 applicationStatus={applicant.status}
                 freelancerId={applicant.Freelancer_ID}
-                freelancerFirstName={applicant.FirstName}
-                freelancerLastName={applicant.LastName}
-                profession={applicant.Proffession}
-                profilePic={applicant.Profile_Picture}
+                freelancerFirstName={applicant.first_name}
+                freelancerLastName={applicant.last_name}
+                profession={applicant.profession}
+                profilePic={applicant.profile_picture}
                 coverLetter={applicant.cover_letter}
                 jobTitle={applicant.job_title}
-                email={applicant.Email}
-                username={applicant.Username}
-                bio={applicant.Bio}
+                email={applicant.email}
+                username={applicant.job_seeker_username}
+                bio={applicant.bio}
                 resume={applicant.resume}
               />
             </div>

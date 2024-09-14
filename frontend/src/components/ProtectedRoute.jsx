@@ -1,10 +1,11 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import React, { useState, useEffect } from "react";
 
 function ProtectedRoute({ children }) {
+  const location = useLocation();
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
@@ -52,10 +53,10 @@ function ProtectedRoute({ children }) {
     return <div>Loading...</div>;
   }
 
-  return isAuthorized ? (
+  return isAuthorized || location.pathname == "/" ? (
     React.cloneElement(children, { userInfo })
   ) : (
-    <Navigate to="/register" />
+    <Navigate to="/login" />
   );
 }
 

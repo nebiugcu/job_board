@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from "../api";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
 import {
@@ -55,11 +56,11 @@ const ClientJob = ({
   console.log(clientName);
 
   const handleJobDelete = async () => {
-    axios
-      .delete(`http://localhost:8800/api/job/delete-job/${jobId}`)
+    api
+      .delete(`api/jobs/${jobId}/`)
       .then((res) => {
         console.log(res);
-        //navigate(0);
+        navigate(0);
       })
       .catch((err) => {
         console.log(err);

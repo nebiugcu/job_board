@@ -39,6 +39,11 @@ const NavContentJobSeeker = ({ username, profile_pic }) => {
             <li>
               <Link to="/applications">Applications</Link>
             </li>
+            <li>
+              <a href="http://127.0.0.1:8000/recommendations/">
+                Job Recommendations
+              </a>
+            </li>
             {/* <li>
               <Link to="/messages">Messages</Link>
             </li> */}
