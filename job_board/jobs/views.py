@@ -133,7 +133,7 @@ def job_recommendations_view(request):
             }
 
             # Load and preprocess data
-            csv_path = r'C:\Users\nebiu\PycharmProjects\job_board\job_board\jobs\data\job_postings.csv'
+            csv_path = r'E:\job_board\job_board\jobs\data\job_postings.csv'
             df = pd.read_csv(csv_path)
 
             # Apply the job match score calculation based on user input

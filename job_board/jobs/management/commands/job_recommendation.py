@@ -12,7 +12,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 import numpy as np
 
 # Define the path to your CSV file
-csv_path = r'C:\Users\nebiu\PycharmProjects\job_board\job_board\jobs\data\job_postings.csv'
+csv_path = r'E:\job_board\job_board\jobs\data\job_postings.csv'
 
 # Candidate profile for job match calculation
 candidate_profile = {

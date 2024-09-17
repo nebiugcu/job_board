@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const Applicant = ({
+  employerName,
   applicationId,
   applicationStatus,
   freelancerId,
@@ -78,6 +79,19 @@ const Applicant = ({
       });
   };
 
+  const sendInvitationEmail = async () => {
+    try {
+      const response = await api.post("/notifications/send-invitation/", {
+        email: email,
+        jobTitle: jobTitle,
+        employerName: employerName,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleApplicantsHire = async () => {
     console.log(applicationId, clientId, freelancerId);
     const data = {
@@ -87,6 +101,7 @@ const Applicant = ({
     try {
       const response = await api.post(`/api/hires/`, data);
       console.log(response.data);
+      sendInvitationEmail();
       navigate(0);
     } catch (e) {
       alert("it looks like something is wrong!");

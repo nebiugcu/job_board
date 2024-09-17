@@ -28,7 +28,8 @@ urlpatterns = [
     path('', include("authentication.urls")),
     path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
-    path('', include('application.urls'))
+    path('', include('application.urls')),
+    path('notifications/', include('notifications.urls')),
 ]
 
 if settings.DEBUG:

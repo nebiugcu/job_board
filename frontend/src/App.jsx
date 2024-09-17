@@ -105,7 +105,11 @@ function App() {
         },
         {
           path: "/applicants/:id",
-          element: <Applicants />,
+          element: (
+            <ProtectedRoute>
+              <Applicants />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/applications",

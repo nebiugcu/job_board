@@ -4,7 +4,7 @@ import api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import Applicant from "@/components/Applicant";
 
-const Applicants = () => {
+const Applicants = ({ userInfo }) => {
   const navigate = useNavigate();
   // const [userInfo, setUserInfo] = useState(null);
   const [jobApplicants, setJobApplicants] = useState([]);
@@ -13,6 +13,8 @@ const Applicants = () => {
   const jobId = id;
   axios.defaults.withCredentials = true;
   useEffect(() => {
+    console.log("heeeeyyyy");
+    console.log(userInfo.name);
     axios
       .get("http://localhost:8800/check")
       .then((res) => {
@@ -44,6 +46,7 @@ const Applicants = () => {
           return (
             <div key={index}>
               <Applicant
+                employerName={userInfo.name}
                 applicationId={applicant.id}
                 applicationStatus={applicant.status}
                 freelancerId={applicant.Freelancer_ID}
