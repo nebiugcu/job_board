@@ -1,16 +1,51 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Recommendation Form</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Enter Your Job Preferences</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Get Recommendations</button>
-    </form>
+    <div class="container">
+        <div class="form-card">
+            <h1>Enter Your Job Preferences</h1>
+            <form action="{% url 'job_recommendations' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="desired_titles">Desired Job Titles:</label>
+                    {{ form.desired_titles }}
+                    <small>{{ form.desired_titles.help_text }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferred_location">Preferred Location:</label>
+                    {{ form.preferred_location }}
+                    <small>{{ form.preferred_location.help_text }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="expected_salary">Expected Salary:</label>
+                    {{ form.expected_salary }}
+                    <small>{{ form.expected_salary.help_text }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience_level">Experience Level:</label>
+                    {{ form.experience_level }}
+                    <small>{{ form.experience_level.help_text }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="skills">Skills:</label>
+                    {{ form.skills }}
+                    <small>{{ form.skills.help_text }}</small>
+                </div>
+
+                <button type="submit" class="btn">Get Recommendations</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

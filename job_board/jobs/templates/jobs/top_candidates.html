@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Top Candidates</h1>
+  <ul>
+    {% for candidate in top_candidates %}
+      <li>
+        <h2>{{ candidate.applicant.user.username }}</h2>
+        <p>Experience Level: {{ candidate.applicant.experience_level }}</p>
+        <p>Skills: {{ candidate.applicant.skills }}</p>
+        <p>Match Score: {{ candidate.match_score }}%</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
