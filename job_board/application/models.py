@@ -12,7 +12,8 @@ class Application(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.job_seeker
+        return self.job_seeker.user.first_name
+
 
 class Hire(models.Model):
     application = models.ForeignKey(Application, on_delete=models.CASCADE)

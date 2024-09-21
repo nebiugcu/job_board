@@ -2,149 +2,95 @@ from django.core.management.base import BaseCommand
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import r2_score
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping
-import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 
-# Define the path to your CSV file
-csv_path = r'E:\job_board\job_board\jobs\data\job_postings.csv'
-
-# Candidate profile for job match calculation
-candidate_profile = {
-    'desired_titles': ['Software Engineer', 'Data Scientist'],
-    'preferred_location': 'New York, NY',
-    'expected_salary': 100000,
-    'experience_level': 'Mid-level',
-    'skills': ['Python', 'Django', 'Machine Learning']
-}
 
 class Command(BaseCommand):
-    help = 'Load, preprocess data, train model, and recommend jobs'
+    help = 'Recommend jobs based on user input and select best candidates for jobs'
 
-    def calculate_job_match(self, row, candidate_profile):
-        """Calculates job match score with custom weights for each criterion."""
-        score = 0
-        max_score = 100  # Total possible score for normalization
-        score_weights = {
-            'title': 5,  # 25% weight
-            'location': 5,  # 15% weight
-            'salary': 20,  # 20% weight
-            'skills':70,  # 40% weight
+    def handle(self, *args, **options):
+        # Path to your CSV file
+        csv_path = 'C:/Users/nebiu/PycharmProjects/job_board/job_board/jobs/data/job_postings.csv'
+
+        # Example user input
+        user_input = {
+            'title': 'Software Engineer',
+            'location': 'San Francisco',
+            'min_salary': 60000,
+            'max_salary': 120000,
+            'skills_desc': ['Python', 'Django', 'Machine Learning']
         }
 
-        # Title Match - Basic string matching
-        title_str = str(row.get('title', ''))
-        if any(title.lower() in title_str.lower() for title in candidate_profile['desired_titles']):
-            score += score_weights['title']
+        # Call the job recommendation function
+        self.job_recommendation(csv_path, user_input)
 
-        # Location Match
-        if candidate_profile['preferred_location'].lower() in str(row.get('location', '')).lower():
-            score += score_weights['location']
+    def job_recommendation(self, csv_path, user_input):
+        # Load your dataset
+        data = pd.read_csv(csv_path)
 
-        # Salary Match
-        if row['min_salary'] and row['max_salary']:
-            salary_range = row['max_salary'] - row['min_salary']
-            if salary_range > 0:
-                salary_proximity = 1 - (abs(candidate_profile['expected_salary'] - row['min_salary']) / salary_range)
-                score += score_weights['salary'] * max(0, salary_proximity)
+        # Ensure skills_desc is treated as a string or list
+        def skills_match(x, user_skills):
+            if isinstance(x, str):  # If skills_desc is a string
+                return 1 if any(skill.lower() in x.lower() for skill in user_skills) else 0
+            elif isinstance(x, list):  # If skills_desc is a list
+                return 1 if any(skill.lower() in skill_item.lower() for skill_item in x for skill in user_skills) else 0
+            else:
+                return 0  # No match if it's neither a string nor a list
 
-        # Skills Match using TF-IDF and cosine similarity
-        candidate_skills = candidate_profile['skills']
-        job_skills = str(row['skills_desc'])
+        # Calculate match score based on matches
+        data['match_score'] = (
+                0.25 * data['title'].apply(
+            lambda x: 1 if user_input['title'].lower() in str(x).lower() else 0) +  # Title match
+                0.25 * data['location'].apply(
+            lambda x: 1 if user_input['location'].lower() in str(x).lower() else 0) +  # Location match
+                0.25 * data[['max_salary', 'med_salary', 'min_salary']].mean(axis=1).apply(
+            lambda x: 1 if user_input['min_salary'] <= x <= user_input['max_salary'] else 0) +  # Salary match
+                0.25 * data['skills_desc'].apply(lambda x: skills_match(x, user_input['skills_desc']))  # Skills match
+        )
 
-        if candidate_skills and job_skills:
-            vectorizer = TfidfVectorizer()
-            skills_vecs = vectorizer.fit_transform([', '.join(candidate_skills), job_skills])
-            cosine_sim = cosine_similarity(skills_vecs[0], skills_vecs[1]).flatten()[0]
-            score += score_weights['skills'] * cosine_sim
+        # Define features (X) and target (y)
+        X = data[['title', 'location', 'max_salary', 'med_salary', 'min_salary', 'skills_desc']]
+        y = data['match_score']
 
-        return (score / max_score) * 100
+        # Preprocess the data (you may need to handle categorical variables if present)
+        X = pd.get_dummies(X, drop_first=True)
 
-    def load_and_preprocess_data(self, csv_path):
-        df = pd.read_csv(csv_path)
-
-        # Fill missing salary values with the median
-        df['min_salary'] = df['min_salary'].fillna(df['min_salary'].median())
-        df['max_salary'] = df['max_salary'].fillna(df['max_salary'].median())
-        df['skills_desc'] = df['skills_desc'].fillna('')
-
-        # Apply job match score
-        df['job_match_score'] = df.apply(lambda row: self.calculate_job_match(row, candidate_profile), axis=1)
-        return df
-
-    def recommend_top_jobs(self, df, top_n=5):
-        """Return the top N recommended jobs based on the calculated job match score."""
-        # Sort jobs by match score in descending order
-        recommended_jobs = df.sort_values(by='job_match_score', ascending=False).head(top_n)
-        return recommended_jobs[['title', 'location', 'job_match_score']]
-
-    def train_neural_network(self, X_train, y_train, X_test, y_test):
-        # Define the neural network
-        model = Sequential()
-        model.add(Dense(128, activation='relu', input_shape=(X_train.shape[1],)))
-        model.add(Dense(64, activation='relu'))
-        model.add(Dense(32, activation='relu'))
-        model.add(Dense(1, activation='linear'))
-
-        # Optimizer with learning rate schedule
-        initial_learning_rate = 0.01
-        lr_schedule = Adam(learning_rate=initial_learning_rate)
-
-        model.compile(optimizer=lr_schedule, loss='mean_squared_error', metrics=['mean_squared_error'])
-
-        # Early stopping to prevent overfitting
-        early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-
-        # Train the model with a smaller batch size and early stopping
-        history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
-                            epochs=100, batch_size=32, callbacks=[early_stopping], verbose=2)
-
-        # Evaluate the model on test data
-        mse, _ = model.evaluate(X_test, y_test, verbose=2)
-
-        # Predict using the trained model
-        y_pred = model.predict(X_test)
-
-        # Calculate R-squared score
-        r2_nn = r2_score(y_test, y_pred)
-
-        return model, mse, r2_nn
-
-    def handle(self, *args, **kwargs):
-        df = self.load_and_preprocess_data(csv_path)
-
-        # Recommend top 5 jobs based on match score
-        self.stdout.write(self.style.SUCCESS("Top 5 Job Recommendations:"))
-        recommended_jobs = self.recommend_top_jobs(df, top_n=5)
-        self.stdout.write(str(recommended_jobs))
-
-        # Prepare the data for training
-        X = df.drop(columns=['job_match_score', 'title', 'location', 'skills_desc', 'description', 'job_posting_url',
-                             'application_url'])
-        y = df['job_match_score']
-
-        # Fill missing values in X
-        X = X.fillna(0)
-
-        # One-hot encode categorical columns
-        X_encoded = pd.get_dummies(X, drop_first=True)
-
-        # Split into train and test sets
-        X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=42)
+        # Split the dataset
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
         # Standardize the features
         scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
 
-        # Train the neural network model
-        self.stdout.write(self.style.SUCCESS("Training Neural Network model..."))
-        model, mse, r2_nn = self.train_neural_network(X_train_scaled, y_train, X_test_scaled, y_test)
+        # Train a model (RandomForestRegressor in this case)
+        model = RandomForestRegressor(n_estimators=50, max_depth=10, n_jobs=-1, random_state=42)
+        model.fit(X_train_scaled, y_train)
 
-        self.stdout.write(self.style.SUCCESS(f"Neural Network - Mean Squared Error: {mse:.2f}"))
-        self.stdout.write(self.style.SUCCESS(f"Neural Network - R-squared: {r2_nn:.2f}"))
+        # Make predictions on the test set
+        y_pred = model.predict(X_test_scaled)
+
+        # Calculate R-squared and Mean Squared Error (MSE)
+        r_squared = model.score(X_test_scaled, y_test)
+        mse = mean_squared_error(y_test, y_pred)
+        print(f"R-squared: {r_squared}")
+        print(f"Mean Squared Error (MSE): {mse}")
+
+        # Predict on all data and find the top 5 candidates
+        data['predicted_match_score'] = model.predict(scaler.transform(pd.get_dummies(X, drop_first=True)))
+        top_5_candidates = data.nlargest(5, 'predicted_match_score')
+
+        # Display top 5 candidates with salary and company name
+        print("\nTop 5 Job Recommendations:")
+        for index, row in top_5_candidates.iterrows():
+            company_name = row.get('company_name', 'Unknown')  # Ensure the company_name field is present in the data
+            max_salary = row.get('max_salary', 'N/A')  # Ensure max_salary is present
+            min_salary = row.get('min_salary', 'N/A')  # Ensure min_salary is present
+            salary_display = f"${min_salary} - ${max_salary}" if min_salary != 'N/A' and max_salary != 'N/A' else "Salary not specified"
+
+            print(f"Title: {row['title']}")
+            print(f"Company: {company_name}")
+            print(f"Location: {row['location']}")
+            print(f"Salary: {salary_display}")
+            print(f"Score: {row['predicted_match_score'] * 100:.2f}%\n")

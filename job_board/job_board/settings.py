@@ -16,13 +16,14 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/media/'  # The base URL to serve media files
-MEDIA_ROOT = os.path.join(BASE_DIR) 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Specify a media folder in the root directory
 
-# Email code
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -30,20 +31,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Fetch from .env
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Fetch from .env
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*isjv+3dk@-kfv568zp+-maz^e83by^s^si2)1%nryh$$@!gjy'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+# Security Settings
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-*isjv+3dk@-kfv568zp+-maz^e83by^s^si2)1%nryh$$@!gjy')
+DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Set DEBUG from .env
 ALLOWED_HOSTS = ["*"]
 
+# Custom User Model
 AUTH_USER_MODEL = 'authentication.User'
 
+# Django REST Framework & JWT Configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -58,11 +54,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-
-
-
-# Application definition
-
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,9 +70,10 @@ INSTALLED_APPS = [
     'ai_ml',
     'notifications',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -92,12 +85,14 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+# URL configuration
 ROOT_URLCONF = 'job_board.urls'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Ensure this points to the 'templates' directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,28 +105,22 @@ TEMPLATES = [
     },
 ]
 
+# WSGI Application
 WSGI_APPLICATION = 'job_board.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'job_board',
-        'USER': 'postgres',
-        'PASSWORD': '12345',
+        'NAME': os.getenv('DB_NAME', 'job_board'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'dawit@03'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
+# Password Validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -147,28 +136,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Static Files
+STATIC_URL = '/static/'
+#STATICFILES_DIRS = [BASE_DIR / 'static']  # Path to your static files
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
+# Media Files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Make sure you have this directory
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# CORS Settings
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWS_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True

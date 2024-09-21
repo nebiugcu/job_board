@@ -1,67 +1,19 @@
 import os
+import pandas as pd
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
-from django.shortcuts import render
-from .models import Job
+from django.core.exceptions import PermissionDenied
+from .models import Job , Applicant
 from .serializers import JobSerializer
 from authentication.models import Employer
-import pandas as pd
-from .management.commands.job_recommendation import Command as JobRecommendationCommand
 from .forms import CandidateProfileForm
+from .forms import JobSelectionForm, CandidateSelectionForm
 
-class JobPostView(generics.ListCreateAPIView):
-    queryset = Job.objects.all()
-    serializer_class = JobSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        # Automatically associate the job with the authenticated employer
-         try:
-            employer = Employer.objects.get(user=self.request.user)
-         except Employer.DoesNotExist:
-            raise PermissionDenied("You must be an employer to create a job.")
-        
-         # Save the job with the associated employer
-         serializer.save(employer=employer)
 
-class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Job.objects.all()
-    serializer_class = JobSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        # Ensure that only jobs created by the authenticated employer can be modified
-        try:
-            employer_profile = self.request.user.employer  # Access the related Employer instance
-        except Employer.DoesNotExist:
-            return Job.objects.none()  # If the user is not an Employer, return an empty queryset
-
-        # Filter jobs based on the Employer instance
-        return Job.objects.filter(employer=employer_profile)
-
-class JobListView(generics.ListAPIView):
-    queryset = Job.objects.all()
-    serializer_class = JobSerializer
-    permission_classes = [permissions.AllowAny]
-
-class EmployerJobListView(generics.ListAPIView):
-    serializer_class = JobSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        # Ensure that only jobs created by the authenticated employer are listed
-        return Job.objects.filter(employer__user=self.request.user)
-
-# Recommendation views
 
 # Candidate profile for job match calculation
-candidate_profile = {
-    'desired_titles': ['Software Engineer', 'Data Scientist'],
-    'preferred_location': 'New York, NY',
-    'expected_salary': 100000,
-    'experience_level': 'Mid-level',
-    'skills': ['Python', 'Django', 'Machine Learning']
-}
-
 def calculate_job_match(row, candidate_profile):
     """Calculates job match score with custom weights for each criterion."""
     score = 0
@@ -93,32 +45,13 @@ def calculate_job_match(row, candidate_profile):
     candidate_skills = candidate_profile['skills']
     job_skills = str(row['skills_desc'])
     if candidate_skills and job_skills:
-        # Simple string matching for skills
         matched_skills = [skill for skill in candidate_skills if skill.lower() in job_skills.lower()]
         skill_match_ratio = len(matched_skills) / len(candidate_skills) if candidate_skills else 0
         score += score_weights['skills'] * skill_match_ratio
 
     return (score / max_score) * 100
 
-def recommend_jobs_view(request):
-    # Load the CSV file (or query the database if jobs are stored there)
-    csv_path = os.path.join(os.path.dirname(__file__), 'data', 'job_postings.csv')
-    df = pd.read_csv(csv_path)
-
-    # Apply the job match score calculation to each job
-    df['job_match_score'] = df.apply(lambda row: calculate_job_match(row, candidate_profile), axis=1)
-
-    # Sort jobs by match score and get the top 5
-    recommended_jobs = df.sort_values(by='job_match_score', ascending=False).head(5)
-
-    # Prepare the data for the template
-    context = {
-        'recommended_jobs': recommended_jobs[['title', 'location', 'job_match_score']]
-    }
-
-    # Render the template with the recommendations
-    return render(request, 'recommended_jobs.html', context)
-
+# Recommendation view for candidates
 def job_recommendations_view(request):
     if request.method == 'POST':
         form = CandidateProfileForm(request.POST)
@@ -132,9 +65,16 @@ def job_recommendations_view(request):
                 'skills': form.cleaned_data['skills'].split(',')
             }
 
-            # Load and preprocess data
-            csv_path = r'E:\job_board\job_board\jobs\data\job_postings.csv'
+            # Load and preprocess data (adjust the path as needed)
+            csv_path = os.path.join(os.path.dirname(__file__), 'data', 'job_postings.csv')
             df = pd.read_csv(csv_path)
+
+            # Ensure company_name column exists, and replace missing/empty values with 'Not mentioned'
+            if 'company_name' in df.columns:
+                df['company_name'].fillna('Not mentioned', inplace=True)  # Replace NaN values
+                df['company_name'].replace('', 'Not mentioned', inplace=True)  # Replace empty strings
+            else:
+                df['company_name'] = 'Not mentioned'  # Set default if column is missing
 
             # Apply the job match score calculation based on user input
             df['job_match_score'] = df.apply(lambda row: calculate_job_match(row, candidate_profile), axis=1)
@@ -143,10 +83,118 @@ def job_recommendations_view(request):
             recommended_jobs = df.sort_values(by='job_match_score', ascending=False).head(5)
 
             # Prepare context for the template
-            context = {'recommended_jobs': recommended_jobs[['title', 'location', 'job_match_score']].to_dict('records')}
+            context = {'recommended_jobs': recommended_jobs[['title', 'location', 'company_name', 'min_salary', 'max_salary', 'job_match_score']].to_dict('records')}
             return render(request, 'jobs/recommendations.html', context)
-
     else:
         form = CandidateProfileForm()
 
     return render(request, 'jobs/recommendation_form.html', {'form': form})
+
+# Job posting views
+class JobPostView(generics.ListCreateAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        try:
+            employer = Employer.objects.get(user=self.request.user)
+        except Employer.DoesNotExist:
+            raise PermissionDenied("You must be an employer to create a job.")
+        serializer.save(employer=employer)
+
+class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        try:
+            employer_profile = self.request.user.employer
+        except Employer.DoesNotExist:
+            return Job.objects.none()
+        return Job.objects.filter(employer=employer_profile)
+
+class JobListView(generics.ListAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [permissions.AllowAny]
+
+class EmployerJobListView(generics.ListAPIView):
+    serializer_class = JobSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Job.objects.filter(employer__user=self.request.user)
+
+# Recommendation form view
+def recommendation_form_view(request):
+    if request.method == 'POST':
+        form = CandidateProfileForm(request.POST)
+        if form.is_valid():
+            # Process the form data here (e.g., save to database, perform recommendations)
+            pass
+    else:
+        form = CandidateProfileForm()
+
+    return render(request, 'jobs/recommendation_form.html', {'form': form})
+
+# comment for new files
+def calculate_candidate_match(applicant, employer_criteria):
+    """Calculates match score for an applicant based on skills and experience level."""
+    score = 0
+    max_score = 100
+    weights = {'skills': 60, 'experience_level': 40}
+
+    # Skills matching
+    applicant_skills = applicant.skills.split(',')
+    employer_skills = employer_criteria['skills'].split(',')
+    matching_skills = [skill for skill in employer_skills if skill.lower() in [s.lower() for s in applicant_skills]]
+    skills_ratio = len(matching_skills) / len(employer_skills) if employer_skills else 0
+    score += weights['skills'] * skills_ratio
+
+    # Experience level match
+    if applicant.experience_level.lower() == employer_criteria['experience_level'].lower():
+        score += weights['experience_level']
+
+    return (score / max_score) * 100
+
+def select_top_candidates_view(request):
+    if request.method == 'POST':
+        # Instantiate forms with POST data
+        job_form = JobSelectionForm(request.POST)
+        candidate_form = CandidateSelectionForm(request.POST)
+
+        if job_form.is_valid() and candidate_form.is_valid():
+            # Get the selected job
+            selected_job = job_form.cleaned_data['job']
+
+            # Fetch the top 5 candidates based on some criteria (e.g., match score)
+            top_candidates = Candidate.objects.filter(job=selected_job).order_by('-match_score')[:5]
+
+            # Prepare the context with top candidates and forms
+            context = {
+                'job_form': job_form,
+                'candidate_form': candidate_form,
+                'top_candidates': top_candidates
+            }
+
+            return render(request, 'jobs/select_top_candidates.html', context)
+        else:
+            # If the form is invalid, re-render the page with the form
+            context = {
+                'job_form': job_form,
+                'candidate_form': candidate_form,
+            }
+            return render(request, 'jobs/select_top_candidates.html', context)
+    else:
+        # Initialize empty forms when the request method is GET
+        job_form = JobSelectionForm()
+        candidate_form = CandidateSelectionForm()
+
+        # Render the template with empty forms
+        context = {
+            'job_form': job_form,
+            'candidate_form': candidate_form,
+        }
+        return render(request, 'jobs/select_top_candidates.html', context)
