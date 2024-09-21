@@ -2,6 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import ProtectedRoute from "./ProtectedRoute";
 import NavContent from "./NavContent";
 
@@ -74,6 +79,7 @@ const NavBar = () => {
         <div className="text-2xl font-bold font-mono w-[20%]">
           <Link to="/">Career Catalyst</Link>
         </div>
+
         <div>
           <ProtectedRoute>
             <NavContent />
@@ -83,18 +89,67 @@ const NavBar = () => {
         {(location.pathname == "/" ||
           location.pathname == "/login" ||
           location.pathname == "/register") && (
-          <div className="flex justify-evenly gap-x-4 items-center">
-            <Link to="/login">
-              <button className="bg-green-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
-                Login
-              </button>
-            </Link>
-            <Link to="/register">
-              <button className="bg-blue-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
-                Register
-              </button>
-            </Link>
-          </div>
+          <>
+            <div className="">
+              <HoverCard>
+                <HoverCardTrigger className=" cursor-pointer">
+                  Resources
+                </HoverCardTrigger>
+                <HoverCardContent className="mt-2">
+                  <div className="flex flex-col gap-y-2">
+                    <p>
+                      <a
+                        className="text-blue-500 text-base"
+                        href="https://www.linkedin.com/interview-prep/"
+                        target="_blank"
+                      >
+                        Interview Preparation
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        className="text-blue-500 text-base"
+                        href="https://www.canva.com/resume/templates/"
+                        target="_blank"
+                      >
+                        Resume Building
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        className="text-blue-500 text-base"
+                        href="https://www.careeronestop.org/JobSearch/Plan/career-counselor.aspx"
+                        target="_blank"
+                      >
+                        Career Counseling
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        className="text-blue-500 text-base"
+                        href="https://www.coursera.org/browse/personal-development"
+                        target="_blank"
+                      >
+                        Skills Development Courses
+                      </a>
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+            <div className="flex justify-evenly gap-x-4 items-center">
+              <Link to="/login">
+                <button className="bg-green-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
+                  Login
+                </button>
+              </Link>
+              <Link to="/register">
+                <button className="bg-blue-600 text-white text-lg font-semibold px-4 py-2 rounded-md">
+                  Register
+                </button>
+              </Link>
+            </div>
+          </>
         )}
       </div>
     </div>

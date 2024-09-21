@@ -4,21 +4,22 @@ import axios from "axios";
 import HomeImg from "../assets/home.jpg";
 import HomeImg2 from "../assets/home2.jpg";
 import HomeImg3 from "../assets/home-img.jpg";
+import HomeImg4 from "../assets/home4.svg";
 
 const Home = () => {
   const style = {
-    backgroundImage: `url(${HomeImg3})`,
-    backgroundSize: "cover", // Adjust background size
+    backgroundImage: `url(${HomeImg4})`,
+    backgroundSize: "contain", // Adjust background size
     backgroundPosition: "center", // Adjust background position
     height: "100vh", // Adjust height
-    width: "100vw", // Adjust width
+    width: "97vw", // Adjust width
   };
   return (
     <div
       style={style}
-      className="min-h-[70vh] flex flex-col gap-y-5 w-[80%] mx-auto"
+      className="min-h-[70vh] flex flex-col -mt-10 w-[80%] mx-auto"
     >
-      <div className=" shadow-md shadow-black font-bold pb-3">
+      {/* <div className=" shadow-md shadow-black font-bold pb-3">
         <div className="mt-10 text-2xl text-center font-mono font-bold pt-4 border-t-8 mb-2">
           Helpful Resources
         </div>
@@ -60,7 +61,7 @@ const Home = () => {
             </a>
           </p>
         </div>
-      </div>
+      </div> */}
       <div className="flex justify-between gap-x-24">
         {/* <div className="w-[55%] flex flex-col gap-y-3 justify-center items-start">
           <h1 className="text-5xl font-bold">
