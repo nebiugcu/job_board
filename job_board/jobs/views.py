@@ -4,6 +4,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
 from django.core.exceptions import PermissionDenied
 from .models import Job , Applicant
+from authentication.models import JobSeeker
+from application.models import Application
 from .serializers import JobSerializer
 from authentication.models import Employer
 from .forms import CandidateProfileForm
@@ -161,38 +163,40 @@ def calculate_candidate_match(applicant, employer_criteria):
 
 def select_top_candidates_view(request):
     if request.method == 'POST':
-        # Instantiate forms with POST data
+        # Instantiate the forms with the submitted POST data
         job_form = JobSelectionForm(request.POST)
         candidate_form = CandidateSelectionForm(request.POST)
 
-        if job_form.is_valid() and candidate_form.is_valid():
-            # Get the selected job
+        if job_form.is_valid():
             selected_job = job_form.cleaned_data['job']
+            selected_category = selected_job.job_category
 
-            # Fetch the top 5 candidates based on some criteria (e.g., match score)
-            top_candidates = Candidate.objects.filter(job=selected_job).order_by('-match_score')[:5]
+            # Fetch the top candidates based on profession matching the job category
+            top_candidates = JobSeeker.objects.filter(application__job=selected_job)
 
-            # Prepare the context with top candidates and forms
+            # Prepare the context with the selected job, the job category, and top candidates
             context = {
                 'job_form': job_form,
                 'candidate_form': candidate_form,
-                'top_candidates': top_candidates
+                'top_candidates': top_candidates,
+                'selected_job': selected_job,
+                'job_category': selected_category,
             }
 
             return render(request, 'jobs/select_top_candidates.html', context)
         else:
-            # If the form is invalid, re-render the page with the form
+            # Invalid form; re-render the page with form errors
             context = {
                 'job_form': job_form,
                 'candidate_form': candidate_form,
             }
             return render(request, 'jobs/select_top_candidates.html', context)
+
     else:
-        # Initialize empty forms when the request method is GET
+        # Initialize empty forms on GET request
         job_form = JobSelectionForm()
         candidate_form = CandidateSelectionForm()
 
-        # Render the template with empty forms
         context = {
             'job_form': job_form,
             'candidate_form': candidate_form,

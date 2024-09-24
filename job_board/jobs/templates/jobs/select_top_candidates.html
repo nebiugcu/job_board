@@ -1,24 +1,36 @@
-{% extends 'base.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Top Candidates</title>
+  </head>
+  <body>
+    <h1>Select Top Candidates</h1>
 
-{% block content %}
-  <h1>Select Top Candidates</h1>
+    <!-- Job Selection Form -->
+    <form method="post">
+      {% csrf_token %}
+      <div>{{ job_form.job.label_tag }} {{ job_form.job }}</div>
+      <button type="submit">Select Job</button>
+    </form>
 
-  <form method="POST">
-    {% csrf_token %}
-    {{ job_form.as_p }}
-    {{ candidate_form.as_p }}
-    <button type="submit">Search Candidates</button>
-  </form>
-
-  {% if top_candidates %}
-    <h2>Top 5 Candidates:</h2>
+    <!-- Display Top Candidates after a job is selected -->
+    {% if top_candidates %}
+    <h2>
+      Top Candidates for Job: {{ selected_job.job_title }} (Category: {{
+      job_category }})
+    </h2>
     <ul>
       {% for candidate in top_candidates %}
-        <li>{{ candidate.name }} - Match Score: {{ candidate.match_score }}%</li>
+      <li>
+        {{ candidate.user.first_name }} {{ candidate.user.last_name }} -
+        Profession: {{ candidate.profession }}
+      </li>
+      {% empty %}
+      <li>No candidates found.</li>
       {% endfor %}
     </ul>
-  {% else %}
-    <p>No candidates found for this job.</p>
-  {% endif %}
-{% endblock %}
+    {% endif %}
+  </body>
+</html>
