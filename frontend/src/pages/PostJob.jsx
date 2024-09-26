@@ -32,7 +32,7 @@ const PostJob = ({ userInfo }) => {
   const [jobData, setJobData] = useState({
     job_title: "",
     job_type: "",
-    applicants_needed: "",
+    applicants_needed: "both", // needs to be both by default
     job_description: "",
     job_category: "",
     job_site: "",

@@ -3,7 +3,7 @@ import pandas as pd
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
 from django.core.exceptions import PermissionDenied
-from .models import Job , Applicant
+from .models import Job
 from authentication.models import JobSeeker
 from application.models import Application
 from .serializers import JobSerializer
