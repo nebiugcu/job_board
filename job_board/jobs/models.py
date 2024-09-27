@@ -1,6 +1,7 @@
 from django.db import models
 from authentication.models import Employer
 from authentication.models import User
+from authentication.models import User
 
 class Job(models.Model):
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
