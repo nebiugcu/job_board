@@ -36,6 +36,16 @@ const Jobs = () => {
   // }, []);
   useEffect(() => {
     api
+      .get("/recommendations/8/")
+      .then((res) => {
+        console.log("%cRecommended Jobs!", "color: green; font-size: 16px;");
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log("%cRecommended Jobs!", "color: yellow; font-size: 16px;");
+        console.log(err);
+      });
+    api
       .get("/jobs/")
       .then((res) => {
         console.log(res.data);

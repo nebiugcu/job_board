@@ -35,6 +35,7 @@ const PostJob = ({ userInfo }) => {
     applicants_needed: "both", // needs to be both by default
     job_description: "",
     job_category: "",
+    required_skills: "",
     job_site: "",
     application_deadline: "",
     experience_level: "",
@@ -248,6 +249,17 @@ const PostJob = ({ userInfo }) => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="grid gap-y-3">
+                <Label className="text-xl" htmlFor="skills">
+                  Skills Required
+                </Label>
+                <Textarea
+                  name="required_skills"
+                  id="skills"
+                  onChange={handleChange}
+                  placeholder="Enter skill you require for the job. (Ex:- Adobe, Illustrator, Blender)"
+                />
               </div>
               <div className="flex items-center gap-x-20">
                 <div className="grid gap-y-3">

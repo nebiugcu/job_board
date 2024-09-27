@@ -5,7 +5,7 @@ import axios from "axios";
 
 const api_url = import.meta.env.VITE_API_URL;
 
-const NavContentJobSeeker = ({ username, profile_pic }) => {
+const NavContentJobSeeker = ({ username, profile_pic, job_seeker_id }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -40,9 +40,9 @@ const NavContentJobSeeker = ({ username, profile_pic }) => {
               <Link to="/applications">Applications</Link>
             </li>
             <li>
-              <a href="http://127.0.0.1:8000/recommendations/">
+              <Link to={`/job-recommendations/${job_seeker_id}`}>
                 Job Recommendations
-              </a>
+              </Link>
             </li>
             {/* <li>
               <Link to="/messages">Messages</Link>

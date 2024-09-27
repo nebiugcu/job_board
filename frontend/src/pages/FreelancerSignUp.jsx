@@ -32,6 +32,7 @@ const FreelancerSignUp = () => {
     password: "",
     profession: "",
     bio: "",
+    skills: "",
     profilePic: null,
     resume: null,
   });
@@ -44,6 +45,7 @@ const FreelancerSignUp = () => {
     password,
     profession,
     bio,
+    skills,
     profilePic,
     resume,
   } = formData;
@@ -71,6 +73,7 @@ const FreelancerSignUp = () => {
     data.append("user.password", password);
     data.append("profession", profession);
     data.append("bio", bio);
+    data.append("skills", skills);
     data.append("profile_picture", profilePic);
     data.append("resume", resume);
     // api/auth/freelancer-register
@@ -90,7 +93,7 @@ const FreelancerSignUp = () => {
     <div className="flex justify-center items-center h-fit py-5">
       <Card className="mx-auto w-[60%]">
         <CardHeader>
-          <CardTitle className="text-xl">Sign Up as a Freelancer</CardTitle>
+          <CardTitle className="text-xl">Sign Up as a Job Seeker</CardTitle>
           <CardDescription>
             Enter your information to create an account
           </CardDescription>
@@ -169,7 +172,9 @@ const FreelancerSignUp = () => {
                       <SelectItem value="graphic designer">
                         Graphic Designer
                       </SelectItem>
-                      <SelectItem value="software engineer">Software Engineer</SelectItem>
+                      <SelectItem value="software engineer">
+                        Software Engineer
+                      </SelectItem>
                       <SelectItem value="photography">Photographer</SelectItem>
                       <SelectItem value="social media manager">
                         Social Media Manager
@@ -191,6 +196,15 @@ const FreelancerSignUp = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <Label htmlFor="skills">Your Skills</Label>
+                <Input
+                  name="skills"
+                  id="skills"
+                  onChange={onChange}
+                  placeholder="Enter your skills (Ex:- Python, React, Express.js)"
+                />
               </div>
               <div className="grid w-full gap-1.5">
                 <Label htmlFor="bio">Bio</Label>

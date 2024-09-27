@@ -94,7 +94,7 @@ const ClientJob = ({
       {/* Job Title */}
       <div className="flex gap-x-3 items-center">
         <h1 className="font-bold text-2xl">{jobTitle}</h1>
-        <Dialog>
+        {/* <Dialog>
           <DialogTrigger asChild>
             <div className="p-2 bg-slate-200 rounded-full">
               {" "}
@@ -170,7 +170,7 @@ const ClientJob = ({
               </DialogClose>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </div>
       {/* Job related Info-1 */}
       <div className="flex gap-x-8">
@@ -227,6 +227,12 @@ const ClientJob = ({
           >
             <Button className={`bg-[#38A3A5] px-4 w-[250px] mb-4`}>
               Applicants
+            </Button>
+          </Link>
+
+          <Link to={`/applicants-recommeded/${jobId}`}>
+            <Button className={`bg-[#3878a5] px-4 w-[250px] mb-4`}>
+              Recommeded Applicants
             </Button>
           </Link>
 

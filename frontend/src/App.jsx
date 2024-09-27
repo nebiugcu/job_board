@@ -23,6 +23,8 @@ import { useEffect, useState } from "react";
 import ActiveJobs from "./pages/ActiveJobs";
 import Contracts from "./pages/Contracts";
 import ProtectedRoute from "./components/ProtectedRoute";
+import JobRecomendations from "./pages/JobRecomendations";
+import RecommededApplicants from "./pages/RecommededApplicants";
 
 function App() {
   const [userInfo, setUserInfo] = useState(null);
@@ -130,6 +132,14 @@ function App() {
         {
           path: "/active-jobs",
           element: <ActiveJobs />,
+        },
+        {
+          path: "/job-recommendations/:id",
+          element: <JobRecomendations />,
+        },
+        {
+          path: "/applicants-recommeded/:id",
+          element: <RecommededApplicants />,
         },
       ],
     },

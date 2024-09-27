@@ -1,11 +1,14 @@
 import os
 import pandas as pd
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.shortcuts import render, get_object_or_404
 import pandas as pd
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
 from django.core.exceptions import PermissionDenied
 from .models import Job
+from django.http import JsonResponse
 from authentication.models import JobSeeker
 from application.models import Application
 from .serializers import JobSerializer
@@ -330,3 +333,88 @@ def select_top_candidates_view(request):
             'candidate_form': candidate_form,
         }
         return render(request, 'jobs/select_top_candidates.html', context)
+
+#  Skill based job recommendations
+
+def recommend_jobs(job_seeker_skills, job_posts):
+    seeker_skills_set = set(skill.strip().lower() for skill in job_seeker_skills.split(','))
+
+    recommendations = []
+    for job in job_posts:
+        job_skills_set = set(skill.strip().lower() for skill in job.required_skills.split(',') if job.required_skills)
+        matched_skills = seeker_skills_set.intersection(job_skills_set)
+        match_percentage = (len(matched_skills) / len(job_skills_set)) * 100 if job_skills_set else 0
+
+        recommendations.append({
+            "job_title": job.job_title,
+            "employer_firstname": job.employer.user.first_name,
+            "employer_lastname": job.employer.user.last_name,
+            "job_description": job.job_description,
+            "skills_needed": job.required_skills,
+            "matched_skills": list(matched_skills),
+            "match_percentage": match_percentage
+        })
+    
+    # Sort jobs by match percentage
+    recommendations = sorted(recommendations, key=lambda x: x['match_percentage'], reverse=True)
+    return recommendations
+
+class JobRecommendationView(APIView):
+    def get(self, request, job_seeker_id):
+        job_seeker = get_object_or_404(JobSeeker, pk=job_seeker_id)
+        job_posts = Job.objects.all()
+
+        # Get job recommendations based on job seeker skills
+        recommendations = recommend_jobs(job_seeker.skills, job_posts)
+        
+        return Response(recommendations)
+
+# skill based applicant recommendation
+
+def calculate_skill_match(job_required_skills, applicant_skills):
+    job_skills_set = set(job_required_skills.lower().split(', '))
+    applicant_skills_set = set(applicant_skills.lower().split(', '))
+    matched_skills = job_skills_set.intersection(applicant_skills_set)
+    
+    if len(job_skills_set) == 0:
+        return 0
+    
+    match_percentage = (len(matched_skills) / len(job_skills_set)) * 100
+    return {
+        'matched_skills': list(matched_skills),
+        'match_percentage': match_percentage
+    }
+
+# View to recommend applicants for a specific job
+def recommend_applicants(request, job_id):
+    # Get the job and ensure it exists
+    job = get_object_or_404(Job, id=job_id)
+    
+    # Get all applications for the job
+    applications = Application.objects.filter(job=job)
+    
+    recommendations = []
+    
+    # Iterate through the applications and compare skills
+    for application in applications:
+        job_seeker = application.job_seeker
+        if job_seeker.skills:
+            match_data = calculate_skill_match(job.required_skills, job_seeker.skills)
+            recommendations.append({
+                'job_seeker': {
+                    'first_name': job_seeker.user.first_name,
+                    'last_name': job_seeker.user.last_name,
+                    'skills': job_seeker.skills,
+                    'matched_skills': match_data['matched_skills'],
+                    'match_percentage': match_data['match_percentage']
+                },
+                'application_id': application.id,
+                'cover_letter': application.cover_letter,
+                'resume': application.resume.url if application.resume else None
+            })
+    
+    # Sort recommendations by match percentage in descending order
+    recommendations = sorted(recommendations, key=lambda x: x['job_seeker']['match_percentage'], reverse=True)
+    
+    return JsonResponse(recommendations, safe=False)
+

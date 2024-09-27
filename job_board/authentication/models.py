@@ -67,3 +67,4 @@ class JobSeeker(models.Model):
     bio = models.TextField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    skills = models.CharField(max_length=255, null=True, blank=True)

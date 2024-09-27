@@ -28,6 +28,15 @@ const Applicants = ({ userInfo }) => {
 
   useEffect(() => {
     api
+      .get(`/recommend-applicants/${jobId}/`)
+      .then((res) => {
+        console.log("recomended applicants");
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    api
       .get(`/employer/applications/${jobId}/`)
       .then((res) => {
         console.log(res.data);

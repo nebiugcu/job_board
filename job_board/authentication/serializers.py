@@ -61,7 +61,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             job_seeker = JobSeeker.objects.get(user=user)
             token['name'] = user.username if hasattr(user, 'username') else None  # Assuming user has a name field
             token['profile_picture'] = job_seeker.profile_picture.url if job_seeker.profile_picture else None
-       
+            token['bio'] = job_seeker.bio
+            token['job_seeker_id'] = job_seeker.id
         
         token['is_employer'] = is_employer
         token['is_job_seeker'] = is_job_seeker

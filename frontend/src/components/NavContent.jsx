@@ -19,6 +19,7 @@ const NavContent = ({ userInfo }) => {
           <NavContentJobSeeker
             username={userInfo && userInfo.name}
             profile_pic={userInfo && userInfo.profile_picture}
+            job_seeker_id={userInfo && userInfo.job_seeker_id}
           />
         ))}
     </div>

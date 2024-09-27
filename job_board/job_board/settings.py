@@ -50,7 +50,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
@@ -144,7 +144,7 @@ USE_TZ = True
 
 # Static Files
 STATIC_URL = '/static/'
-#STATICFILES_DIRS = [BASE_DIR / 'static']  # Path to your static files
+STATICFILES_DIRS = [BASE_DIR / 'static']  # Path to your static files
 
 # Media Files
 MEDIA_URL = '/media/'

@@ -1,0 +1,111 @@
+/* Existing styles for job list and container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+}
+
+/* Form container styling */
+.form-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto; /* Center the form */
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #777;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+/* Button styling */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn:hover {
+  background-color: #005bb5;
+}
+
+/* Job list and job card layout */
+.job-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* Grid with flexible columns */
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.job-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.job-card:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Hover effect */
+}
+
+.job-card h2 {
+  font-size: 1.5rem;
+  color: #0073e6;
+}
+
+.job-card p {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.job-card p strong {
+  font-weight: bold;
+  color: #333;
+}

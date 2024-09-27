@@ -77,9 +77,7 @@ const Login = () => {
                   <Link
                     href="/forgot-password"
                     className="ml-auto inline-block text-sm underline"
-                  >
-                    Forgot your password?
-                  </Link>
+                  ></Link>
                 </div>
                 <Input
                   name="password"
@@ -128,13 +126,16 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block">
+      <div>
+        Login to our platform to Explore and engage with different Jobs.
+      </div>
+      {/* <div className="hidden lg:block">
         <img
           src={LoginImg}
           alt="Image"
           className="h-full w-full relative -bottom-6 object-contain"
         />
-      </div>
+      </div> */}
     </div>
   );
 };

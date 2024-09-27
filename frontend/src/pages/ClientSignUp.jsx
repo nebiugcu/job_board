@@ -78,7 +78,7 @@ const ClientSignup = () => {
     <div className="flex justify-center items-center h-fit py-5">
       <Card className="mx-auto w-[55%]">
         <CardHeader>
-          <CardTitle className="text-xl">Sign Up as Client</CardTitle>
+          <CardTitle className="text-xl">Sign Up as Employer</CardTitle>
           <CardDescription>
             Enter your information to create an account
           </CardDescription>
