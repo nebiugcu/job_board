@@ -142,8 +142,8 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div>
-        Login to our platform to Explore and engage with different Jobs.
+      <div className="flex justify-center items-center text-6xl text-center font-semibold">
+        Empowering you to reach new heights
       </div>
       {/* <div className="hidden lg:block">
         <img
