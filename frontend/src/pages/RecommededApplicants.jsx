@@ -22,7 +22,7 @@ const RecommededApplicants = () => {
 
   return (
     <>
-      <div className="h-[70vh] ">
+      <div className="h-[90vh] ">
         <h1 className="text-xl font-bold w-[80%] mx-auto mb-5">
           Recommeded Jobs
         </h1>

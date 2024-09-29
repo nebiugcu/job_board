@@ -378,12 +378,10 @@ const Profile = ({ userInfo, setAccessAgain }) => {
                   : ""}
               </div> */}
               <div className=" mt-4">
-                <h3 className="font-semibold text-lg">About</h3>
-                <p>
-                  {userInfo.is_employer
-                    ? `${userInfo.client_type}`
-                    : `${userInfo.bio}`}
-                </p>
+                <h3 className="font-semibold text-lg">
+                  {userInfo.is_job_seeker && `About`}
+                </h3>
+                <p>{userInfo.is_job_seeker && `${userInfo.bio}`}</p>
                 {userInfo.is_job_seeker && (
                   <>
                     <h1 className="font-medium mt-3">Skills</h1>
