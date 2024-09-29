@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 const JobRecomendations = () => {
   const [jobs, setJobs] = useState(null);
-  const {id} = useParams();
+  const { id } = useParams();
   const job_seeker_id = id;
   useEffect(() => {
     console.log("id", job_seeker_id);
@@ -21,7 +21,7 @@ const JobRecomendations = () => {
       });
   }, []);
   return (
-    <div className="h-[70vh] ">
+    <div className="h-[90vh]">
       <h1 className="text-xl font-bold w-[70%] mx-auto mb-5">
         Recommeded Jobs
       </h1>

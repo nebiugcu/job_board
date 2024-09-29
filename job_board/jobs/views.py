@@ -356,7 +356,7 @@ def recommend_jobs(job_seeker_skills, job_posts):
         })
     
     # Sort jobs by match percentage
-    recommendations = sorted(recommendations, key=lambda x: x['match_percentage'], reverse=True)
+    recommendations = sorted(recommendations, key=lambda x: x['match_percentage'], reverse=True)[:5]
     return recommendations
 
 class JobRecommendationView(APIView):
@@ -414,7 +414,7 @@ def recommend_applicants(request, job_id):
             })
     
     # Sort recommendations by match percentage in descending order
-    recommendations = sorted(recommendations, key=lambda x: x['job_seeker']['match_percentage'], reverse=True)
+    recommendations = sorted(recommendations, key=lambda x: x['job_seeker']['match_percentage'], reverse=True)[:5]
     
     return JsonResponse(recommendations, safe=False)
 

@@ -68,14 +68,14 @@ const NavContentJobSeeker = ({ username, profile_pic, job_seeker_id }) => {
                 ref={profileRef}
                 className=" bg-[#3d7b4c] z-30 absolute top-[45px] right-0 text-slate-300 w-[150px] flex flex-col py-3 px-2 rounded-[7px]"
               >
-                {/* <span
+                <span
                   onClick={() => {
                     setProfileOpen(false);
                   }}
                 >
                   <Link to="/profile"> Profile</Link>
                 </span>
-                <span
+                {/* <span
                   onClick={() => {
                     setProfileOpen(false);
                   }}

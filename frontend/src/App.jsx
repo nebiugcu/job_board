@@ -46,9 +46,11 @@ function App() {
   const Layout = () => {
     return (
       <>
-        <NavBar userData={userInfo} />
-        <Outlet />
-        <Footer />
+        <div className="relative">
+          <NavBar userData={userInfo} />
+          <Outlet />
+          <Footer />
+        </div>
       </>
     );
   };
@@ -59,7 +61,11 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home userData={userInfo} />,
+          element: (
+            <ProtectedRoute>
+              <Home userData={userInfo} />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/login",
@@ -79,15 +85,28 @@ function App() {
         },
         {
           path: "/profile",
-          element: <Profile />,
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/jobs",
-          element: <Jobs />,
+
+          element: (
+            <ProtectedRoute>
+              <Jobs />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/posts",
-          element: <Posts />,
+          element: (
+            <ProtectedRoute>
+              <Posts />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/postjob",

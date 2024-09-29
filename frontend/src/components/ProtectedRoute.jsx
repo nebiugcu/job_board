@@ -13,10 +13,31 @@ function ProtectedRoute({ children }) {
     auth().catch(() => setIsAuthorized(false));
   }, []);
 
+  const setAccessAgain = async () => {
+    console.log("token set");
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (!token) {
+      setIsAuthorized(false);
+      return;
+    }
+    const decoded = jwtDecode(token);
+    const tokenExpiration = decoded.exp;
+    const now = Date.now() / 1000;
+
+    if (tokenExpiration < now) {
+      await refreshToken();
+    } else {
+      setIsAuthorized(true);
+      setUserInfo(decoded);
+    }
+    console.log("userInfo", userInfo);
+    // window.location.reload();
+  };
+
   const refreshToken = async () => {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN);
     try {
-      const res = await api.post("/api/token/refresh/", {
+      const res = await api.post("/api/token/refresh", {
         refresh: refreshToken,
       });
       if (res.status === 200) {
@@ -54,7 +75,7 @@ function ProtectedRoute({ children }) {
   }
 
   return isAuthorized || location.pathname == "/" ? (
-    React.cloneElement(children, { userInfo })
+    React.cloneElement(children, { userInfo, setAccessAgain })
   ) : (
     <Navigate to="/login" />
   );

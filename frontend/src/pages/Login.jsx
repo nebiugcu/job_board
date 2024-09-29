@@ -13,6 +13,7 @@ const Login = () => {
     password: "",
     isClient: null,
   });
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -29,15 +30,30 @@ const Login = () => {
         email: userLoginInfo.email,
         password: userLoginInfo.password,
       });
+      console.log(res);
+      alert("success");
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+
       if (userLoginInfo.isClient) {
-        navigate("/posts", { state: { isLoggedIn: true, isClient: true } });
+        navigate("/posts", {
+          state: {
+            isLoggedIn: true,
+            isClient: true,
+            password: userLoginInfo.password,
+          },
+        });
         window.location.reload();
         alert("success");
       }
       if (userLoginInfo.isClient === false) {
-        navigate("/jobs", { state: { isLoggedIn: true, isClient: false } });
+        navigate("/jobs", {
+          state: {
+            isLoggedIn: true,
+            isClient: false,
+            password: userLoginInfo.password,
+          },
+        });
         window.location.reload();
         alert("success");
       }

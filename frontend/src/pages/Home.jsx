@@ -6,7 +6,7 @@ import HomeImg2 from "../assets/home2.jpg";
 import HomeImg3 from "../assets/home-img.jpg";
 import HomeImg4 from "../assets/home4.svg";
 
-const Home = () => {
+const Home = ({ userInfo }) => {
   const style = {
     backgroundImage: `url(${HomeImg4})`,
     backgroundSize: "contain", // Adjust background size
@@ -14,6 +14,11 @@ const Home = () => {
     height: "100vh", // Adjust height
     width: "97vw", // Adjust width
   };
+
+  useEffect(() => {
+    console.log("%cUserInfo!", "color: blue;");
+    console.log(userInfo);
+  }, []);
   return (
     <div
       style={style}
