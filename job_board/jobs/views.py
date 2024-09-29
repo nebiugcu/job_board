@@ -350,6 +350,8 @@ def recommend_jobs(job_seeker_skills, job_posts):
             "employer_firstname": job.employer.user.first_name,
             "employer_lastname": job.employer.user.last_name,
             "job_description": job.job_description,
+            "location": job.location,
+            "salary": job.salary,
             "skills_needed": job.required_skills,
             "matched_skills": list(matched_skills),
             "match_percentage": match_percentage

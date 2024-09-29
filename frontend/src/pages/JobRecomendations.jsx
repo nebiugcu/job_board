@@ -47,9 +47,15 @@ const JobRecomendations = () => {
                 </div>
                 <div>
                   <span className="font-medium text-blue-800 text-lg ml-3">
-                    Job Description
+                    Location:
                   </span>
-                  : {job.job_description}
+                  : {job.location}
+                </div>
+                <div>
+                  <span className="font-medium text-blue-800 text-lg ml-3">
+                    Salary:
+                  </span>
+                  : {job.salary}
                 </div>
                 <div>
                   {" "}
