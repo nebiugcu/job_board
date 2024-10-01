@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 const RecommededApplicants = () => {
   const { id } = useParams();
   const jobId = id;
-  const [applicants, setApplicants] = useState(null);
+  const [applicants, setApplicants] = useState([]);
   useEffect(() => {
     api
       .get(`/recommend-applicants/${jobId}/`)
@@ -24,9 +24,13 @@ const RecommededApplicants = () => {
     <>
       <div className="h-[90vh] ">
         <h1 className="text-xl font-bold w-[80%] mx-auto mb-5">
-          Recommeded Jobs
+          Recommeded Applicants
         </h1>
-        {applicants &&
+        {applicants.length === 0 ? (
+          <div className="flex flex-col w-[70%] mx-auto shadow-sm shadow-slate-400 rounded-md p-4 m-4">
+            No Applicants yet for this job, to recommend!
+          </div>
+        ) : (
           applicants.map((applicant, index) => {
             return (
               <div
@@ -58,7 +62,8 @@ const RecommededApplicants = () => {
                 </div>
               </div>
             );
-          })}
+          })
+        )}
       </div>
     </>
   );

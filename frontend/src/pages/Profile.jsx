@@ -155,7 +155,7 @@ const Profile = ({ userInfo, setAccessAgain }) => {
   const updateProfile = async () => {
     try {
       if (userInfo.is_employer) {
-        const response = await api.post(
+        const response = await api.patch(
           `/employer/${userInfo.employer_id}/update/`,
           employerData
         );
@@ -352,7 +352,10 @@ const Profile = ({ userInfo, setAccessAgain }) => {
               <div className="w-[100px] h-[100px] bg-sky-600 overflow-hidden rounded-full">
                 <Avatar className="cursor-pointer w-full h-full">
                   <AvatarImage src={`${api_url}${userInfo.profile_picture}`} />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarFallback>
+                    {userInfo.firstName[0]}
+                    {userInfo.lastName[0]}
+                  </AvatarFallback>
                 </Avatar>
               </div>
             </div>

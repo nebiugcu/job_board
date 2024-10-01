@@ -97,7 +97,7 @@ const ClientJob = ({
       </div>
       {/* Job related Info-1 */}
       <div className="flex gap-x-8">
-        <span className="text-sm text-slate-500 font-medium">{clientName}</span>
+        <span className="text-sm text-slate-500 font-medium">{`=>`}</span>
         <span className="text-sm text-slate-500 font-medium">
           {formatDistanceToNow(parseISO(postedAt), { addSuffix: true })}
         </span>

@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Job from "../components/Job";
 import { useNavigate } from "react-router-dom";
 import backImg from "../assets/3407044.jpg";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const Jobs = () => {
   const navigate = useNavigate();
@@ -35,16 +36,16 @@ const Jobs = () => {
   //     .catch((err) => console.log(err));
   // }, []);
   useEffect(() => {
-    api
-      .get("/recommendations/8/")
-      .then((res) => {
-        console.log("%cRecommended Jobs!", "color: green; font-size: 16px;");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log("%cRecommended Jobs!", "color: yellow; font-size: 16px;");
-        console.log(err);
-      });
+    // api
+    //   .get("/recommendations/8/")
+    //   .then((res) => {
+    //     console.log("%cRecommended Jobs!", "color: green; font-size: 16px;");
+    //     console.log(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log("%cRecommended Jobs!", "color: yellow; font-size: 16px;");
+    //     console.log(err);
+    //   });
     api
       .get("/jobs/")
       .then((res) => {
@@ -380,23 +381,26 @@ const Jobs = () => {
               displayedJobs.map((job, index) => {
                 return (
                   <div key={index}>
-                    <Job
-                      jobTitle={job.job_title}
-                      clientName={job.id}
-                      postedAt={job.created_at}
-                      locatedAt={job.location}
-                      jobDescription={job.job_description}
-                      jobCategory={job.job_category}
-                      jobSite={job.job_site}
-                      jobType={job.job_type}
-                      salary={job.salary}
-                      experience={job.experience_level}
-                      deadline={job.application_deadline}
-                      jobId={job.id}
-                      // freelancerId={freelancerId}
-                      // isLoggedIn={isLoggedIn}
-                      gender={job.applicants_needed}
-                    />
+                    <ProtectedRoute>
+                      <Job
+                        jobTitle={job.job_title}
+                        clientFName={job.employer_firstname}
+                        clientLName={job.employer_lastname}
+                        postedAt={job.created_at}
+                        locatedAt={job.location}
+                        jobDescription={job.job_description}
+                        jobCategory={job.job_category}
+                        jobSite={job.job_site}
+                        jobType={job.job_type}
+                        salary={job.salary}
+                        experience={job.experience_level}
+                        deadline={job.application_deadline}
+                        jobId={job.id}
+                        // freelancerId={freelancerId}
+                        // isLoggedIn={isLoggedIn}
+                        gender={job.applicants_needed}
+                      />
+                    </ProtectedRoute>
                   </div>
                 );
               })}

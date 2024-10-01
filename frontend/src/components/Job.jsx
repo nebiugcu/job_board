@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 
 const Job = ({
   jobTitle,
-  clientName,
+  clientFName,
+  clientLName,
   postedAt,
   locatedAt,
   jobDescription,
@@ -26,7 +27,8 @@ const Job = ({
   const job = {
     jobId: jobId,
     jobTitle: jobTitle,
-    clientName: clientName,
+    clientFName: clientFName,
+    clientLName: clientLName,
     postedAt: postedAt,
     locatedAt: locatedAt,
     jobDescription: jobDescription,
@@ -78,7 +80,23 @@ const Job = ({
     //       console.log(err);
     //     });
     // }
-    navigate("/application", { state: job });
+    if (applicationDatePassed()) {
+      alert("Sorry, Application date has passed!!");
+    } else {
+      api
+        .get(`/apply/${jobId}/has-applied/`)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.has_applied) {
+            alert("You have already applied to this job");
+          } else {
+            navigate("/application", { state: job });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
   // const location = useLocation();
   // console.log(location);
@@ -99,7 +117,9 @@ const Job = ({
       </div>
       {/* Job related Info-1 */}
       <div className="flex gap-x-8">
-        <span className="text-sm text-slate-500 font-medium">{clientName}</span>
+        <span className="text-sm text-slate-500 font-medium">
+          {clientFName} {clientLName}
+        </span>
         <span className="text-sm text-slate-500 font-medium">
           {formatDistanceToNow(parseISO(postedAt), { addSuffix: true })}
         </span>

@@ -31,7 +31,6 @@ const Login = () => {
         password: userLoginInfo.password,
       });
       console.log(res);
-      alert("success");
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
 
@@ -59,7 +58,7 @@ const Login = () => {
       }
       console.log("success");
     } catch (error) {
-      alert(error);
+      alert("Please check your credentials and try again!");
       console.log(error);
     }
   };

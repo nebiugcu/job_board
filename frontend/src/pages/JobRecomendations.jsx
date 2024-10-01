@@ -3,7 +3,7 @@ import api from "../api";
 import { useParams } from "react-router-dom";
 
 const JobRecomendations = () => {
-  const [jobs, setJobs] = useState(null);
+  const [jobs, setJobs] = useState([]);
   const { id } = useParams();
   const job_seeker_id = id;
   useEffect(() => {
@@ -25,7 +25,11 @@ const JobRecomendations = () => {
       <h1 className="text-xl font-bold w-[70%] mx-auto mb-5">
         Recommeded Jobs
       </h1>
-      {jobs &&
+      {jobs.length === 0 ? (
+        <div className="flex flex-col w-[70%] mx-auto shadow-sm shadow-slate-400 rounded-md p-4 m-4">
+          There are no Jobs to recommend!
+        </div>
+      ) : (
         jobs.map((job, index) => {
           return (
             <div
@@ -67,7 +71,8 @@ const JobRecomendations = () => {
               </div>
             </div>
           );
-        })}
+        })
+      )}
     </div>
   );
 };

@@ -105,7 +105,7 @@ const Application = () => {
               }}
               placeholder="Type your message here."
             />
-            <div className="grid w-full max-w-sm items-center gap-1.5">
+            <div className="grid w-full max-w-sm items-center mt-2 gap-1.5">
               <Label htmlFor="cv">Upload Resume or CV</Label>
               <Input name="resume" id="cv" onChange={onChange} type="file" />
             </div>
@@ -124,16 +124,15 @@ const Application = () => {
         <div className="shadow-md shadow-slate-400 w-[25%] h-fit py-4 px-5 rounded-md hover:scale-[1.02] duration-1000">
           <div>
             <h1 className="text-2xl font-medium text-teal-800 mb-3">
-              About The Client
+              About The Employer
             </h1>
             <div className="mb-3">
-              <h2 className="hover:text-emerald-700 cursor-pointer">
-                {job.clientName}
+              <h2 className="hover:text-emerald-700 font-medium ">
+                <span className="text-sky-800">Name:</span> {job.clientFName}{" "}
+                {job.clientLName}
               </h2>
             </div>
-            <div className="">
-              <h2>3 jobs posted</h2>
-            </div>
+            <div className=""></div>
           </div>
         </div>
       </div>

@@ -102,6 +102,18 @@ const PostJob = ({ userInfo }) => {
     console.log("dhdk");
     console.log(sentJobData);
     console.log(userInfo);
+    if (jobData.salary === "") {
+      alert("Please enter salary");
+    }
+    if (jobData.location === "") {
+      alert("Please enter location");
+    }
+    if (jobData.required_skills === "") {
+      alert("Please enter required skills");
+    }
+    if (jobData.experience_level === "") {
+      alert("Please enter experience level");
+    }
     api
       .post("/api/jobs/", sentJobData)
       .then((res) => {
@@ -229,22 +241,85 @@ const PostJob = ({ userInfo }) => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Categories</SelectLabel>
+                      <SelectItem value="Accounting and Finance">
+                        Accounting and Finance
+                      </SelectItem>
+                      <SelectItem value="Administrative and Support">
+                        Administrative and Support
+                      </SelectItem>
+                      <SelectItem value="Architecture and Planning">
+                        Architecture and Planning
+                      </SelectItem>
+                      <SelectItem value="Arts and Entertainment">
+                        Arts and Entertainment
+                      </SelectItem>
+                      <SelectItem value="Consulting">Consulting</SelectItem>
+                      <SelectItem value="Construction and Real Estate">
+                        Construction and Real Estate
+                      </SelectItem>
+                      <SelectItem value="Creative art and design">
+                        Creative art and design
+                      </SelectItem>
+                      <SelectItem value="Customer Service">
+                        Customer Service
+                      </SelectItem>
+                      <SelectItem value="Education and Training">
+                        Education and Training
+                      </SelectItem>
+                      <SelectItem value="Engineering">Engineering</SelectItem>
+                      <SelectItem value="Finance and Accounting">
+                        Finance and Accounting
+                      </SelectItem>
+                      <SelectItem value="Healthcare">Healthcare</SelectItem>
+                      <SelectItem value="Hospitality and Tourism">
+                        Hospitality and Tourism
+                      </SelectItem>
+                      <SelectItem value="Human Resources">
+                        Human Resources
+                      </SelectItem>
+                      <SelectItem value="Information Technology">
+                        Information Technology
+                      </SelectItem>
+                      <SelectItem value="Legal Services">
+                        Legal Services
+                      </SelectItem>
+                      <SelectItem value="Logistics and Supply Chain">
+                        Logistics and Supply Chain
+                      </SelectItem>
+                      <SelectItem value="Manufacturing and Production">
+                        Manufacturing and Production
+                      </SelectItem>
+                      <SelectItem value="Marketing and Sales">
+                        Marketing and Sales
+                      </SelectItem>
+                      <SelectItem value="Media and Communication">
+                        Media and Communication
+                      </SelectItem>
+                      <SelectItem value="Media and Communications">
+                        Media and Communications
+                      </SelectItem>
+                      <SelectItem value="Music and Audio">
+                        Music and Audio
+                      </SelectItem>
+                      <SelectItem value="Non-Profit and Social Services">
+                        Non-Profit and Social Services
+                      </SelectItem>
+                      <SelectItem value="Public Relations">
+                        Public Relations
+                      </SelectItem>
+                      <SelectItem value="Research and Development">
+                        Research and Development
+                      </SelectItem>
+                      <SelectItem value="Retail">Retail</SelectItem>
+                      <SelectItem value="Science and Biotechnology">
+                        Science and Biotechnology
+                      </SelectItem>
                       <SelectItem value="Software Development">
                         Software Development
                       </SelectItem>
-                      <SelectItem value="Finance">
-                        Accounting and Finance
+                      <SelectItem value="Video Editing">
+                        Video Editing
                       </SelectItem>
-                      <SelectItem value="Media">
-                        Media and Communication
-                      </SelectItem>
-                      <SelectItem value="Editing">Video Editing</SelectItem>
-                      <SelectItem value="Design">
-                        Creative art and design
-                      </SelectItem>
-                      <SelectItem value="Music">Music and Audio</SelectItem>
-                      <SelectItem value="Service">Customer Service</SelectItem>
-                      <SelectItem value="Consulting">Consulting</SelectItem>
                       <SelectItem value="Other">Other</SelectItem>
                     </SelectGroup>
                   </SelectContent>
@@ -325,7 +400,7 @@ const PostJob = ({ userInfo }) => {
                       <SelectLabel>Experience Levels</SelectLabel>
                       <SelectItem value="expert">Expert</SelectItem>
                       <SelectItem value="senior">Senior</SelectItem>
-                      <SelectItem value="intermidiate">Intermidate</SelectItem>
+                      <SelectItem value="intermediate">Intermidate</SelectItem>
                       <SelectItem value="junior">Junior</SelectItem>
                       <SelectItem value="entry">Entry</SelectItem>
                     </SelectGroup>

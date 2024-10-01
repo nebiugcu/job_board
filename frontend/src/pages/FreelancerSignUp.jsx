@@ -78,6 +78,12 @@ const FreelancerSignUp = () => {
     data.append("resume", resume);
     // api/auth/freelancer-register
     axios.defaults.withCredentials = true;
+    if (profilePic == null) {
+      data.delete("profile_picture");
+    }
+    if (resume == null) {
+      data.delete("resume");
+    }
     api
       .post("/api/register/jobseeker/", data)
       .then((res) => {
@@ -169,29 +175,71 @@ const FreelancerSignUp = () => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Profession</SelectLabel>
+                      <SelectItem value="accountant">Accountant</SelectItem>
+                      <SelectItem value="Administrative Assistant">
+                        Administrative Assistant
+                      </SelectItem>
+                      <SelectItem value="Business Analyst">
+                        Business Analyst
+                      </SelectItem>
+                      <SelectItem value="Civil Engineer">
+                        Civil Engineer
+                      </SelectItem>
+                      <SelectItem value="copywriter">Copywriter</SelectItem>
+                      <SelectItem value="Customer Support Specialist">
+                        Customer Support Specialist
+                      </SelectItem>
+                      <SelectItem value="Data Analyst">Data Analyst</SelectItem>
+                      <SelectItem value="Digital Marketing Specialist">
+                        Digital Marketing Specialist
+                      </SelectItem>
+                      <SelectItem value="editor">Editor</SelectItem>
                       <SelectItem value="graphic designer">
                         Graphic Designer
+                      </SelectItem>
+                      <SelectItem value="human resource">
+                        Human resource Manager
+                      </SelectItem>
+                      <SelectItem value="Human Resources Manager">
+                        Human Resources Manager
+                      </SelectItem>
+                      <SelectItem value="Lawyer">Lawyer</SelectItem>
+                      <SelectItem value="Marketing Manager">
+                        Marketing Manager
+                      </SelectItem>
+                      <SelectItem value="Mechanical Engineer">
+                        Mechanical Engineer
+                      </SelectItem>
+                      <SelectItem value="photography">Photographer</SelectItem>
+                      <SelectItem value="Photographer">Photographer</SelectItem>
+                      <SelectItem value="Project Manager">
+                        Project Manager
+                      </SelectItem>
+                      <SelectItem value="Registered Nurse">
+                        Registered Nurse
+                      </SelectItem>
+                      <SelectItem value="Sales Representative">
+                        Sales Representative
+                      </SelectItem>
+                      <SelectItem value="social media manager">
+                        Social Media Manager
                       </SelectItem>
                       <SelectItem value="software engineer">
                         Software Engineer
                       </SelectItem>
-                      <SelectItem value="photography">Photographer</SelectItem>
-                      <SelectItem value="social media manager">
-                        Social Media Manager
-                      </SelectItem>
-                      <SelectItem value="web developer">
-                        Web Developer
-                      </SelectItem>
+                      <SelectItem value="Translator">Translator</SelectItem>
                       <SelectItem value="tutor">Tutor</SelectItem>
-                      <SelectItem value="editor">Editor</SelectItem>
-                      <SelectItem value="copywriter">Copywriter</SelectItem>
-                      <SelectItem value="human resource">
-                        Human resource Manager
+                      <SelectItem value="UX/UI Designer">
+                        UX/UI Designer
                       </SelectItem>
                       <SelectItem value="virtual assistant">
                         Virtual Assistant
                       </SelectItem>
-                      <SelectItem value="accountant">Accountant</SelectItem>
+                      <SelectItem value="Video Editor">Video Editor</SelectItem>
+                      <SelectItem value="Web Developer">
+                        Web Developer
+                      </SelectItem>
+
                       <SelectItem value="other">Other</SelectItem>
                     </SelectGroup>
                   </SelectContent>

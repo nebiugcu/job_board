@@ -5,7 +5,13 @@ import axios from "axios";
 
 const api_url = import.meta.env.VITE_API_URL;
 
-const NavContentJobSeeker = ({ username, profile_pic, job_seeker_id }) => {
+const NavContentJobSeeker = ({
+  username,
+  profile_pic,
+  job_seeker_id,
+  firstName,
+  lastName,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -58,7 +64,10 @@ const NavContentJobSeeker = ({ username, profile_pic, job_seeker_id }) => {
               className="cursor-pointer"
             >
               <AvatarImage src={`${api_url}${profile_pic}`} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>
+                {firstName[0]}
+                {lastName[0]}
+              </AvatarFallback>
             </Avatar>
             <div>
               <span className=" text-lg font-bold">{username}</span>

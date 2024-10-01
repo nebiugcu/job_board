@@ -14,12 +14,16 @@ const NavContent = ({ userInfo }) => {
           <NavContentEmployer
             username={userInfo && userInfo.name}
             profile_pic={userInfo && userInfo.profile_picture}
+            firstName={userInfo && userInfo.firstName}
+            lastName={userInfo && userInfo.lastName}
           />
         ) : (
           <NavContentJobSeeker
             username={userInfo && userInfo.name}
             profile_pic={userInfo && userInfo.profile_picture}
             job_seeker_id={userInfo && userInfo.job_seeker_id}
+            firstName={userInfo && userInfo.firstName}
+            lastName={userInfo && userInfo.lastName}
           />
         ))}
     </div>
