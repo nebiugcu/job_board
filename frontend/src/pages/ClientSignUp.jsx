@@ -69,7 +69,12 @@ const ClientSignup = () => {
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data.msg);
+        if (error.response.data.user.username) {
+          alert(error.response.data.user.username[0]);
+        }
+        if (error.response.data.user.email) {
+          alert(error.response.data.user.email[0]);
+        }
         console.log(data);
       });
     console.log(data);
