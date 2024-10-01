@@ -1,12 +1,16 @@
 from rest_framework import generics, permissions
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
 from .models import Application, Hire
 from jobs.models import Job
 from authentication.models import JobSeeker
 from .serializers import ApplicationSerializer, HireSerializer
 from jobs.models import Job
+from django.http import JsonResponse
+from authentication.models import JobSeeker
+
 
 class EmployerApplicationListView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
@@ -126,3 +130,27 @@ class HireDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         # Ensure that only hires related to the authenticated employer can be modified
         return Hire.objects.filter(employer=self.request.user)
+
+# Check if a jobseeker applied for a job
+@api_view(['GET'])
+def has_applied(request, job_id):
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        return Response({"detail": "Authentication credentials were not provided."}, status=401)
+    
+    # Get the job object
+    job = get_object_or_404(Job, id=job_id)
+    
+    # Check if the authenticated user is a JobSeeker
+    try:
+        job_seeker = JobSeeker.objects.get(user=request.user)
+    except JobSeeker.DoesNotExist:
+        return Response({"detail": "User is not a job seeker."}, status=403)
+
+    # Check if the job seeker has applied for the job
+    application_exists = Application.objects.filter(job=job, job_seeker=job_seeker).exists()
+    
+    if application_exists:
+        return Response({"has_applied": True}, status=200)
+    else:
+        return Response({"has_applied": False}, status=200)
