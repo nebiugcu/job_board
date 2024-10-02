@@ -1,4 +1,4 @@
-"""
+git"""
 ASGI config for job_board project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.

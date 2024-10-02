@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ae156feb-d2f4-410c-a366-8ff076ea7082" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/job_board.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile_pictures/Screenshot_2024-08-25_090047.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile_pictures/Screenshot_2024-09-24_160419.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile_pictures/Screenshot_2024-09-24_160519.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/Data_Scientist.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/database_admin.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/database_admin_BpT1g0y.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/digital_marketing_resume.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_2NUcbxW.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_W7AhvHw.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_ZIaP5vn.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_ckFIqOI.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_fijDqrf.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_nulPi9m.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/network_admin_rJurGDW.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/resumes/resume_for_software_T4laJFN.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/pages/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/pages/Register.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/job_board/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/job_board/asgi.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "nebiu-ai",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+</project>
