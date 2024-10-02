@@ -12,8 +12,8 @@ const Register = () => {
     <div className="h-[70vh] flex flex-col gap-y-10 justify-center items-center">
       <div>
         <h1 className="text-5xl text-center font-mono font-semibold text-green-700">
-          Which role describes
-          <br /> your account ?
+          Choose the role that aligns
+          <br /> with your account:
         </h1>
       </div>
       <div className="flex justify-center items-center h-fit">
