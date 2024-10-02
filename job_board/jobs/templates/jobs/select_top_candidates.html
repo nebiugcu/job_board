@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Select Top Candidates</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles2.css' %}" />
   </head>
   <body>
     <h1>Select Top Candidates</h1>
@@ -17,10 +19,7 @@
 
     <!-- Display Top Candidates after a job is selected -->
     {% if top_candidates %}
-    <h2>
-      Top Candidates for Job: {{ selected_job.job_title }} (Category: {{
-      job_category }})
-    </h2>
+    <h2>Top Candidates for Job: {{ selected_job.job_title }}</h2>
     <ul>
       {% for candidate in top_candidates %}
       <li>
