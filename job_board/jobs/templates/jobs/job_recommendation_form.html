@@ -1,0 +1,8 @@
+<!-- jobs/job_recommendation_form.html -->
+
+<h2>Job Recommendation Form</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Get Recommendations</button>
+</form>

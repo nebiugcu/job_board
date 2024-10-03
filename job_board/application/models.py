@@ -1,8 +1,9 @@
+# applications/models.py
+
 from django.db import models
 from jobs.models import Job
 from authentication.models import JobSeeker, Employer
 
-# Create your models here.
 class Application(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     job_seeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
@@ -13,7 +14,6 @@ class Application(models.Model):
 
     def __str__(self):
         return self.job_seeker.user.first_name
-
 
 class Hire(models.Model):
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
@@ -26,4 +26,3 @@ class Hire(models.Model):
 
     def __str__(self):
         return self.employer
-

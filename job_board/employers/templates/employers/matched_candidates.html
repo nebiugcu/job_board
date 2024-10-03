@@ -1,0 +1,22 @@
+<!-- employers/matched_candidates.html -->
+
+<h2>Top 5 Matched Candidates</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Candidate Name</th>
+            <th>Job Applied For</th>
+            <th>Match Score (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for candidate in matched_candidates %}
+        <tr>
+            <td>{{ candidate.application.job_seeker.user.first_name }} {{ candidate.application.job_seeker.user.last_name }}</td>
+            <td>{{ candidate.application.job.job_title }}</td>
+            <td>{{ candidate.score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

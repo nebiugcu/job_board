@@ -1,96 +1,89 @@
 from django.core.management.base import BaseCommand
+from django.utils import timezone
+from jobs.models import Job
+from applications.models import Application
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-
+import PyPDF2  # For PDF resume parsing
+import docx  # For docx resume parsing
+import os
 
 class Command(BaseCommand):
-    help = 'Recommend jobs based on user input and select best candidates for jobs'
+    help = 'Match top candidates with job posts based on expiration, skills, and proximity'
 
-    def handle(self, *args, **options):
-        # Path to your CSV file
-        csv_path = 'C:/Users/nebiu/PycharmProjects/job_board/job_board/jobs/data/job_postings.csv'
+    def extract_text_from_resume(self, resume_path):
+        """Extract text from resume file (PDF or docx)."""
+        file_extension = os.path.splitext(resume_path)[1]
+        if file_extension == '.pdf':
+            with open(resume_path, 'rb') as file:
+                reader = PyPDF2.PdfReader(file)
+                text = ''
+                for page in range(len(reader.pages)):
+                    text += reader.pages[page].extract_text()
+            return text
+        elif file_extension == '.docx':
+            doc = docx.Document(resume_path)
+            return ' '.join([para.text for para in doc.paragraphs])
+        else:
+            return ''  # Unsupported format
 
-        # Example user input
-        user_input = {
-            'title': 'Software Engineer',
-            'location': 'San Francisco',
-            'min_salary': 60000,
-            'max_salary': 120000,
-            'skills_desc': ['Python', 'Django', 'Machine Learning']
+    def extract_skills_from_resume(self, resume_text):
+        """Extracts job-related skills from the resume using keyword matching."""
+        skills_list = ['Python', 'Django', 'Machine Learning', 'Data Analysis', 'JavaScript']
+        extracted_skills = [skill for skill in skills_list if skill.lower() in resume_text.lower()]
+        return extracted_skills
+
+    def calculate_geographic_proximity(self, job_location, candidate_location):
+        """Dummy function to calculate geographic proximity."""
+        # Placeholder, use geolocation APIs to improve this logic
+        return 1.0 if job_location.lower() == candidate_location.lower() else 0.5
+
+    def calculate_job_match(self, job, candidate_profile, resume_skills):
+        """Calculates job match score with custom weights for each criterion."""
+        score = 0
+        max_score = 100
+        score_weights = {
+            'title': 10,
+            'location': 10,
+            'salary': 30,
+            'skills': 50,
         }
 
-        # Call the job recommendation function
-        self.job_recommendation(csv_path, user_input)
+        # Title match
+        if any(title.lower() in job.job_title.lower() for title in candidate_profile['desired_titles']):
+            score += score_weights['title']
 
-    def job_recommendation(self, csv_path, user_input):
-        # Load your dataset
-        data = pd.read_csv(csv_path)
+        # Location match
+        location_proximity = self.calculate_geographic_proximity(job.location, candidate_profile['preferred_location'])
+        score += score_weights['location'] * location_proximity
 
-        # Ensure skills_desc is treated as a string or list
-        def skills_match(x, user_skills):
-            if isinstance(x, str):  # If skills_desc is a string
-                return 1 if any(skill.lower() in x.lower() for skill in user_skills) else 0
-            elif isinstance(x, list):  # If skills_desc is a list
-                return 1 if any(skill.lower() in skill_item.lower() for skill_item in x for skill in user_skills) else 0
-            else:
-                return 0  # No match if it's neither a string nor a list
+        # Skills match
+        job_skills = job.required_skills
+        vectorizer = TfidfVectorizer()
+        skill_texts = [' '.join(candidate_profile['skills']), job_skills]
+        skills_vecs = vectorizer.fit_transform(skill_texts)
+        cosine_sim = cosine_similarity(skills_vecs[0], skills_vecs[1]).flatten()[0]
+        score += score_weights['skills'] * cosine_sim
 
-        # Calculate match score based on matches
-        data['match_score'] = (
-                0.25 * data['title'].apply(
-            lambda x: 1 if user_input['title'].lower() in str(x).lower() else 0) +  # Title match
-                0.25 * data['location'].apply(
-            lambda x: 1 if user_input['location'].lower() in str(x).lower() else 0) +  # Location match
-                0.25 * data[['max_salary', 'med_salary', 'min_salary']].mean(axis=1).apply(
-            lambda x: 1 if user_input['min_salary'] <= x <= user_input['max_salary'] else 0) +  # Salary match
-                0.25 * data['skills_desc'].apply(lambda x: skills_match(x, user_input['skills_desc']))  # Skills match
-        )
+        return (score / max_score) * 100
 
-        # Define features (X) and target (y)
-        X = data[['title', 'location', 'max_salary', 'med_salary', 'min_salary', 'skills_desc']]
-        y = data['match_score']
+    def handle(self, *args, **kwargs):
+        # Fetch jobs where the expiration date hasn't passed
+        jobs = Job.objects.filter(application_deadline__gte=timezone.now())
+        candidate_profile = {
+            'desired_titles': ['Software Engineer', 'Data Scientist'],
+            'preferred_location': 'New York, NY',
+            'expected_salary': 100000,
+            'skills': ['Python', 'Django', 'Machine Learning']
+        }
 
-        # Preprocess the data (you may need to handle categorical variables if present)
-        X = pd.get_dummies(X, drop_first=True)
+        # Example: Fetch candidate's resume text
+        application = Application.objects.first()  # Replace with appropriate query
+        resume_text = self.extract_text_from_resume(application.resume.path)
+        resume_skills = self.extract_skills_from_resume(resume_text)
 
-        # Split the dataset
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-        # Standardize the features
-        scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
-
-        # Train a model (RandomForestRegressor in this case)
-        model = RandomForestRegressor(n_estimators=50, max_depth=10, n_jobs=-1, random_state=42)
-        model.fit(X_train_scaled, y_train)
-
-        # Make predictions on the test set
-        y_pred = model.predict(X_test_scaled)
-
-        # Calculate R-squared and Mean Squared Error (MSE)
-        r_squared = model.score(X_test_scaled, y_test)
-        mse = mean_squared_error(y_test, y_pred)
-        print(f"R-squared: {r_squared}")
-        print(f"Mean Squared Error (MSE): {mse}")
-
-        # Predict on all data and find the top 5 candidates
-        data['predicted_match_score'] = model.predict(scaler.transform(pd.get_dummies(X, drop_first=True)))
-        top_5_candidates = data.nlargest(5, 'predicted_match_score')
-
-        # Display top 5 candidates with salary and company name
-        print("\nTop 5 Job Recommendations:")
-        for index, row in top_5_candidates.iterrows():
-            company_name = row.get('company_name', 'Unknown')  # Ensure the company_name field is present in the data
-            max_salary = row.get('max_salary', 'N/A')  # Ensure max_salary is present
-            min_salary = row.get('min_salary', 'N/A')  # Ensure min_salary is present
-            salary_display = f"${min_salary} - ${max_salary}" if min_salary != 'N/A' and max_salary != 'N/A' else "Salary not specified"
-
-            print(f"Title: {row['title']}")
-            print(f"Company: {company_name}")
-            print(f"Location: {row['location']}")
-            print(f"Salary: {salary_display}")
-            print(f"Score: {row['predicted_match_score'] * 100:.2f}%\n")
+        # Calculate and display job match scores
+        for job in jobs:
+            match_score = self.calculate_job_match(job, candidate_profile, resume_skills)
+            self.stdout.write(f'Job: {job.job_title}, Match Score: {match_score}')

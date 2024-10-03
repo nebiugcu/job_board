@@ -1,0 +1,8 @@
+<!-- employers/candidate_match_form.html -->
+
+<h2>Candidate Match Form</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Find Candidates</button>
+</form>
