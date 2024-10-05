@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
+import { jwtDecode } from "jwt-decode";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ const Login = () => {
     password: "",
     isClient: null,
   });
+  const [userInfo, setUserInfo] = useState(null);
 
   const navigate = useNavigate();
 
@@ -34,27 +36,51 @@ const Login = () => {
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
 
+      const auth = async () => {
+        const token = localStorage.getItem(ACCESS_TOKEN);
+        if (!token) {
+          return;
+        }
+        const decoded = jwtDecode(token);
+        const tokenExpiration = decoded.exp;
+        const now = Date.now() / 1000;
+
+        setUserInfo(decoded);
+      };
+
+      auth();
+      console.log("user Info");
+      console.log(userInfo);
+
       if (userLoginInfo.isClient) {
-        navigate("/posts", {
-          state: {
-            isLoggedIn: true,
-            isClient: true,
-            password: userLoginInfo.password,
-          },
-        });
-        window.location.reload();
-        alert("success");
+        if (userInfo.is_employer) {
+          navigate("/posts", {
+            state: {
+              isLoggedIn: true,
+              isClient: true,
+              password: userLoginInfo.password,
+            },
+          });
+          window.location.reload();
+          alert("success");
+        } else {
+          alert("You are not an Employer. check your role and try again.");
+        }
       }
       if (userLoginInfo.isClient === false) {
-        navigate("/jobs", {
-          state: {
-            isLoggedIn: true,
-            isClient: false,
-            password: userLoginInfo.password,
-          },
-        });
-        window.location.reload();
-        alert("success");
+        if (userInfo.is_job_seeker) {
+          navigate("/jobs", {
+            state: {
+              isLoggedIn: true,
+              isClient: false,
+              password: userLoginInfo.password,
+            },
+          });
+          window.location.reload();
+          alert("success");
+        } else {
+          alert("You are not a Job Seeker. check your role and try again.");
+        }
       }
       console.log("success");
     } catch (error) {
