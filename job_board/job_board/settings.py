@@ -112,9 +112,9 @@ WSGI_APPLICATION = 'job_board.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'job_board2'),
+        'NAME': os.getenv('DB_NAME', 'job_board'),
         'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'dawit@03'),
+        'PASSWORD': os.getenv('DB_PASSWORD', '12345'),
         'HOST': 'localhost',
         'PORT': '5432',
     }

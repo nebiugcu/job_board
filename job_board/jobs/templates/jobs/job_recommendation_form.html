@@ -2,7 +2,87 @@
 
 <h2>Job Recommendation Form</h2>
 <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Get Recommendations</button>
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Get Recommendations</button>
 </form>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .recommendation-form {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .recommendation-form form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .recommendation-form label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  .recommendation-form input,
+  .recommendation-form select,
+  .recommendation-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+  }
+
+  .recommendation-form input:focus,
+  .recommendation-form select:focus,
+  .recommendation-form textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .btn-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    .recommendation-form {
+      padding: 15px;
+    }
+  }
+</style>
