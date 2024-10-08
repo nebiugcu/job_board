@@ -80,7 +80,7 @@ const NavBar = () => {
           Career Catalyst
         </div>
 
-        <div>
+        <div className=" flex-1">
           <ProtectedRoute>
             <NavContent />
           </ProtectedRoute>

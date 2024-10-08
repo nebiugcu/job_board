@@ -32,9 +32,14 @@ const NavContentEmployer = ({ username, profile_pic, firstName, lastName }) => {
     <>
       <div className="flex justify-between items-center gap-x-80">
         <div>
-          <ul className="flex justify-between gap-x-4">
+          <ul className="flex justify-between gap-x-2">
             <li>
               <Link to="/posts">Job posts</Link>
+            </li>
+            <li>
+              <a href="http://127.0.0.1:8000/employer/candidate-match/">
+                Find applicants
+              </a>
             </li>
             {/* <li>
               <Link to="/active-jobs">Active Jobs</Link>

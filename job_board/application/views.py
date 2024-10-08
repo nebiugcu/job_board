@@ -1,4 +1,6 @@
 from rest_framework import generics, permissions
+from django.shortcuts import render
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -203,8 +205,8 @@ def candidate_match_view(request):
             # Sort candidates by match score in descending order and limit to top 5
             matched_candidates = sorted(matched_candidates, key=lambda x: x['score'], reverse=True)[:5]
 
-            return render(request, 'templates/matched_candidates.html', {'matched_candidates': matched_candidates})
+            return render(request, 'employers/matched_candidates.html', {'matched_candidates': matched_candidates})
     else:
         form = CandidateMatchForm()
 
-    return render(request, 'templates/candidate_match_form.html', {'form': form})
+    return render(request, 'employers/candidate_match_form.html', {'form': form})

@@ -1,8 +1,9 @@
-<h2>Job Recommendation Form</h2>
+<!-- employers/candidate_match_form.html -->
 
+<h2>Candidate Match Form</h2>
 <form method="post">
   {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Get Recommendations</button>
+  <button type="submit">Find Candidates</button>
 </form>
 
 <style>
@@ -24,7 +25,7 @@
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
   }
 
@@ -36,7 +37,7 @@
   select,
   textarea {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -54,7 +55,7 @@
 
   button {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     font-size: 18px;
     font-weight: bold;
     background-color: #28a745;
@@ -62,14 +63,10 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
   }
 
   button:hover {
     background-color: #218838;
-  }
-
-  button:active {
-    background-color: #1e7e34;
   }
 </style>

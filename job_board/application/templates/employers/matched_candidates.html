@@ -1,0 +1,68 @@
+<!-- employers/matched_candidates.html -->
+<h2>Top 5 Matched Candidates</h2>
+
+<div class="candidate-grid">
+  {% for candidate in matched_candidates %}
+  <div class="candidate-card">
+    <div class="candidate-name">
+      {{ candidate.first_name }} {{ candidate.last_name }}
+    </div>
+    <div class="candidate-detail">Profession: {{ candidate.profession }}</div>
+    <div class="match-score">Match Score: {{ candidate.score }}%</div>
+  </div>
+  {% endfor %}
+</div>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .candidate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+
+  .candidate-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s ease-in-out;
+    text-align: left;
+  }
+
+  .candidate-card:hover {
+    transform: scale(1.05);
+  }
+
+  .candidate-detail {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .candidate-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .match-score {
+    font-size: 18px;
+    font-weight: bold;
+    color: #28a745;
+  }
+</style>

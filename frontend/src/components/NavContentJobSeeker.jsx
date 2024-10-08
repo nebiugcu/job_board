@@ -36,9 +36,9 @@ const NavContentJobSeeker = ({
   };
   return (
     <>
-      <div className="flex justify-between items-center gap-x-80">
+      <div className="flex justify-between items-center ml-6 gap-x-8">
         <div>
-          <ul className="flex justify-between gap-x-4">
+          <ul className="flex justify-between gap-x-5">
             <li>
               <Link to="/jobs">Explore Jobs</Link>
             </li>
@@ -49,6 +49,11 @@ const NavContentJobSeeker = ({
               <Link to={`/job-recommendations/${job_seeker_id}`}>
                 Job Recommendations
               </Link>
+            </li>
+            <li>
+              <a href="http://127.0.0.1:8000/job-recommendations/" className="">
+                Find recommendations
+              </a>
             </li>
             {/* <li>
               <Link to="/messages">Messages</Link>
