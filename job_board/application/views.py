@@ -203,8 +203,8 @@ def candidate_match_view(request):
             # Sort candidates by match score in descending order and limit to top 5
             matched_candidates = sorted(matched_candidates, key=lambda x: x['score'], reverse=True)[:5]
 
-            return render(request, 'employers/matched_candidates.html', {'matched_candidates': matched_candidates})
+            return render(request, 'templates/matched_candidates.html', {'matched_candidates': matched_candidates})
     else:
         form = CandidateMatchForm()
 
-    return render(request, 'employers/candidate_match_form.html', {'form': form})
+    return render(request, 'templates/candidate_match_form.html', {'form': form})
