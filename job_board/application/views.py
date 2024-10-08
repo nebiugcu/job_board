@@ -10,6 +10,11 @@ from .serializers import ApplicationSerializer, HireSerializer
 from jobs.models import Job
 from django.http import JsonResponse
 from authentication.models import JobSeeker
+from authentication.models import User, JobSeeker, Employer
+from .forms import CandidateMatchForm
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 
 class EmployerApplicationListView(generics.ListAPIView):

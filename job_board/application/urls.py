@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import  ApplicationView, ApplicationDetailView, HireView, HireDetailView, JobSeekerApplicationListView, EmployerApplicationListView, RejectApplicationView, has_applied
+from .views import  ApplicationView, ApplicationDetailView, HireView, HireDetailView, JobSeekerApplicationListView, EmployerApplicationListView, RejectApplicationView, has_applied, candidate_match_view
 
 urlpatterns = [
     path('api/applications/', ApplicationView.as_view(), name='application-list-create'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/hires/', HireView.as_view(), name='hire_list'),
     path('api/hires/<int:pk>/', HireDetailView.as_view(), name='hire_detail'),
     path('apply/<int:job_id>/has-applied/', has_applied, name='has_applied'),
+    path('employer/candidate-match/', candidate_match_view, name='candidate_match'),
 ]
