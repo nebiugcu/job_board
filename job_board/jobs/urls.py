@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     JobPostView, JobDetailView, JobListView,
     EmployerJobListView, job_recommendations_view,
-    recommendation_form_view, select_top_candidates_view, JobRecommendationView, recommend_applicants
+    recommendation_form_view, select_top_candidates_view, JobRecommendationView, recommend_applicants, job_recommendation_view
 )
 
 urlpatterns = [
@@ -15,6 +15,7 @@ urlpatterns = [
     path('select-top-candidates/', select_top_candidates_view, name='select_top_candidates'),
     path('recommendations/<int:job_seeker_id>/', JobRecommendationView.as_view(), name='job-recommendations'),
     path('recommend-applicants/<int:job_id>/', recommend_applicants, name='recommend-applicants'),
+    path('job-recommendations/', job_recommendation_view, name='job_recommendations'),
 
 ]
 

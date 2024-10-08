@@ -19,6 +19,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from .models import Job
 from .forms import JobRecommendationForm
+from django.utils import timezone
 
 
 
