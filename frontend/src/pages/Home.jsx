@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import HomeImg from "../assets/home.jpg";
 import HomeImg2 from "../assets/home2.jpg";
@@ -7,6 +7,7 @@ import HomeImg3 from "../assets/home-img.jpg";
 import HomeImg4 from "../assets/home4.svg";
 
 const Home = ({ userInfo }) => {
+  const navigate = useNavigate();
   const style = {
     backgroundImage: `url(${HomeImg4})`,
     backgroundSize: "contain", // Adjust background size
@@ -16,6 +17,7 @@ const Home = ({ userInfo }) => {
   };
 
   useEffect(() => {
+    navigate("/login");
     console.log("%cUserInfo!", "color: blue;");
     console.log(userInfo);
   }, []);

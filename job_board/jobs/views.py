@@ -420,3 +420,5 @@ def recommend_applicants(request, job_id):
     
     return JsonResponse(recommendations, safe=False)
 
+# recommend jobss
+
