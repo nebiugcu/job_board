@@ -31,12 +31,12 @@ const RecommededApplicants = () => {
             No Applicants yet for this job, to recommend!
           </div>
         ) : (
-          <div className="flex w-[90%] flex-nowrap mx-auto">
+          <div className="flex gap-5 justify-center items-center w-[90%] flex-nowrap mx-auto">
             {applicants.map((applicant, index) => {
               return (
                 <div
                   key={index}
-                  className=" bg-slate-200 min-w-[40%] hover:scale-[1.05] duration-500 p-6 rounded-lg shadow-sm shadow-slate-600 mb-6"
+                  className=" bg-slate-200 min-w-[40%] hover:scale-[1.05] duration-500 p-6 rounded-lg shadow-md shadow-slate-300 mb-6"
                 >
                   <div className="flex flex-col gap-y-1 gap-x-1">
                     <div>
