@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import axios from "axios";
 import api from "../api";
 import { Button } from "@/components/ui/button";
@@ -89,7 +89,7 @@ const Jobs = () => {
     const filteredJobs = allJobs;
   };
   return (
-    <div className="py-5">
+    <div className="py-20 h-fit overflow-y-scroll">
       <div className="flex gap-x-14 px-10 justify-center">
         {/* Filtering sidebar */}
         <div
@@ -378,32 +378,38 @@ const Jobs = () => {
           {/* job card Lists */}
           <div>
             {displayedJobs &&
-              displayedJobs.map((job, index) => {
-                return (
-                  <div key={index}>
-                    <ProtectedRoute>
-                      <Job
-                        jobTitle={job.job_title}
-                        clientFName={job.employer_firstname}
-                        clientLName={job.employer_lastname}
-                        postedAt={job.created_at}
-                        locatedAt={job.location}
-                        jobDescription={job.job_description}
-                        jobCategory={job.job_category}
-                        jobSite={job.job_site}
-                        jobType={job.job_type}
-                        salary={job.salary}
-                        experience={job.experience_level}
-                        deadline={job.application_deadline}
-                        jobId={job.id}
-                        // freelancerId={freelancerId}
-                        // isLoggedIn={isLoggedIn}
-                        gender={job.applicants_needed}
-                      />
-                    </ProtectedRoute>
-                  </div>
-                );
-              })}
+              displayedJobs
+                .sort(
+                  (a, b) =>
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
+                )
+                .map((job, index) => {
+                  return (
+                    <div key={index}>
+                      <ProtectedRoute>
+                        <Job
+                          jobTitle={job.job_title}
+                          clientFName={job.employer_firstname}
+                          clientLName={job.employer_lastname}
+                          postedAt={job.created_at}
+                          locatedAt={job.location}
+                          jobDescription={job.job_description}
+                          jobCategory={job.job_category}
+                          jobSite={job.job_site}
+                          jobType={job.job_type}
+                          salary={job.salary}
+                          experience={job.experience_level}
+                          deadline={job.application_deadline}
+                          jobId={job.id}
+                          // freelancerId={freelancerId}
+                          // isLoggedIn={isLoggedIn}
+                          gender={job.applicants_needed}
+                        />
+                      </ProtectedRoute>
+                    </div>
+                  );
+                })}
           </div>
           <div className="flex justify-center items-end">
             {displayBtn && (

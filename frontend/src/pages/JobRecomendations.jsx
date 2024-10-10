@@ -21,7 +21,7 @@ const JobRecomendations = () => {
       });
   }, []);
   return (
-    <div className="h-[90vh]">
+    <div className="h-fit overflow-y-scroll py-10">
       <h1 className="text-xl font-bold w-[70%] mx-auto mb-5">
         Recommeded Jobs
       </h1>

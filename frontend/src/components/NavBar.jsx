@@ -74,7 +74,7 @@ const NavBar = () => {
   // }
 
   return (
-    <div className=" bg-[#22577A] py-2 mb-10">
+    <div className=" bg-[#22577A] py-2 mb-10 drop-shadow-2xl shadow-blue-700 ">
       <div className="flex w-full px-3 md:w-[80%] mx-auto justify-between items-center text-white">
         <div className="text-2xl font-bold font-mono w-[20%]">
           Career Catalyst
@@ -90,7 +90,7 @@ const NavBar = () => {
           location.pathname == "/login" ||
           location.pathname == "/register") && (
           <>
-            <div className="">
+            <div className=" mr-72">
               <HoverCard>
                 <HoverCardTrigger className=" cursor-pointer">
                   Resources

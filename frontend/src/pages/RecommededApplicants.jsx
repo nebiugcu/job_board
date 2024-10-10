@@ -31,38 +31,67 @@ const RecommededApplicants = () => {
             No Applicants yet for this job, to recommend!
           </div>
         ) : (
-          applicants.map((applicant, index) => {
-            return (
-              <div
-                key={index}
-                className=" bg-slate-200 w-[80%] p-6 rounded-lg shadow-sm shadow-slate-600 mx-auto mb-6"
-              >
-                <div className="flex gap-y-1 gap-x-1">
-                  <div>
-                    <span className=" font-medium text-blue-800 text-lg ml-3">
-                      JobSeeker
-                    </span>
-                    : {applicant.job_seeker.first_name}{" "}
-                    {applicant.job_seeker.last_name}
-                  </div>
-                  <div>
-                    <span className="font-medium text-blue-800 text-lg ml-3">
-                      Cover Letter
-                    </span>
-                    : {applicant.cover_letter}
-                  </div>
+          <div className="flex w-[90%] flex-nowrap mx-auto">
+            {applicants.map((applicant, index) => {
+              return (
+                <div
+                  key={index}
+                  className=" bg-slate-200 min-w-[40%] hover:scale-[1.05] duration-500 p-6 rounded-lg shadow-sm shadow-slate-600 mb-6"
+                >
+                  <div className="flex flex-col gap-y-1 gap-x-1">
+                    <div>
+                      <span className=" font-medium text-blue-800 text-lg ml-3">
+                        JobSeeker
+                      </span>
+                      : {applicant.job_seeker.first_name}{" "}
+                      {applicant.job_seeker.last_name}
+                    </div>
+                    <div>
+                      <span className="font-medium text-blue-800 text-lg ml-3">
+                        Cover Letter
+                      </span>
+                      : {applicant.cover_letter}
+                    </div>
 
-                  <div>
-                    {" "}
-                    <span className="font-medium text-blue-800 text-lg ml-3">
-                      Match Percentage
-                    </span>
-                    : {applicant.job_seeker.match_percentage}
+                    <div>
+                      {" "}
+                      <span className="font-medium text-blue-800 text-lg ml-3">
+                        Match Percentage from skills:
+                      </span>
+                      : {applicant.job_seeker_match.match_percentage}%
+                    </div>
+                    <div>
+                      {" "}
+                      <span className="font-medium text-blue-800 text-lg ml-3">
+                        Match based on resume:
+                      </span>
+                      : {applicant.resume_match.match_percentage}%
+                    </div>
+                    <div>
+                      <span className="font-medium text-blue-800 text-lg ml-3">
+                        Skills of Jobseeker:{" "}
+                      </span>
+                      {applicant.job_seeker.skills
+                        .split(",")
+                        .map((skill, index) => {
+                          return <span key={index}>{skill} </span>;
+                        })}
+                    </div>
+                    <div>
+                      <span className="font-medium text-blue-800 text-lg ml-3">
+                        skill Extracted from resume:{" "}
+                      </span>
+                      {applicant.resume_match.matched_skills.map(
+                        (skill, index) => {
+                          return <span key={index}>{skill} </span>;
+                        }
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         )}
       </div>
     </>

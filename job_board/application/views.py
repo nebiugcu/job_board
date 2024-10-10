@@ -16,6 +16,10 @@ from authentication.models import User, JobSeeker, Employer
 from .forms import CandidateMatchForm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import os
+import spacy
+import PyPDF2
+import docx
 
 
 
@@ -165,6 +169,43 @@ def has_applied(request, job_id):
 
 # candidate match
 
+nlp = spacy.load('en_core_web_sm')
+
+
+
+def extract_text_from_pdf(pdf_path):
+    text = ""
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        for page in reader.pages:
+            text += page.extract_text()
+    return text
+
+def extract_text_from_docx(docx_path):
+    doc = docx.Document(docx_path)
+    return "\n".join([para.text for para in doc.paragraphs])
+
+def extract_text_from_resume(file_path):
+    file_ext = os.path.splitext(file_path)[1].lower()
+    if file_ext == ".pdf":
+        return extract_text_from_pdf(file_path)
+    elif file_ext == ".docx":
+        return extract_text_from_docx(file_path)
+    else:
+        return None  # Unsupported file format
+
+# Function to extract skills from resume text using spaCy
+def extract_skills_with_spacy(text):
+    doc = nlp(text)
+    skills = []
+
+    # Assuming that skills are mostly nouns or proper nouns, we filter based on POS tagging
+    for token in doc:
+        if token.pos_ in ['NOUN', 'PROPN']:  # Adjust POS types based on your needs
+            skills.append(token.text.lower())
+    
+    return skills
+
 def candidate_match_view(request):
     if request.method == 'POST':
         form = CandidateMatchForm(request.POST)
@@ -184,23 +225,51 @@ def candidate_match_view(request):
             for application in applications:
                 job_seeker = application.job_seeker
 
-                if job_seeker.skills:  # Ensure job seeker has listed skills
+                resume_path = application.resume.path if application.resume else job_seeker.resume.path if job_seeker.resume else None
+                if resume_path:
+                    resume_text = extract_text_from_resume(resume_path)
+                    if resume_text:
+                        # Basic cleaning and skill extraction (you can further improve this by using NLP)
+                        candidate_skills = [skill.strip() for skill in resume_text.lower().split() if skill.isalpha()]
+                    else:
+                        candidate_skills = []
+                elif job_seeker.skills:
                     candidate_skills = job_seeker.skills.split(',')
+                else:
+                    candidate_skills = []
 
-                    # Calculate skills match using TF-IDF and cosine similarity
+                # Calculate skills match using TF-IDF and cosine similarity
+                if candidate_skills:
                     vectorizer = TfidfVectorizer()
                     skills_vecs = vectorizer.fit_transform([', '.join(required_skills), ', '.join(candidate_skills)])
                     cosine_sim = cosine_similarity(skills_vecs[0], skills_vecs[1]).flatten()[0]
-
                     match_score = cosine_sim * 100
 
-                    # Add job seeker details with match score
                     matched_candidates.append({
                         'first_name': job_seeker.user.first_name,
                         'last_name': job_seeker.user.last_name,
                         'profession': job_seeker.profession,
-                        'score': match_score
+                        'score': match_score,
+                        'matched_skills': list(set(required_skills).intersection(candidate_skills)),
                     })
+
+                # if job_seeker.skills:  # Ensure job seeker has listed skills
+                #     candidate_skills = job_seeker.skills.split(',')
+
+                #     # Calculate skills match using TF-IDF and cosine similarity
+                #     vectorizer = TfidfVectorizer()
+                #     skills_vecs = vectorizer.fit_transform([', '.join(required_skills), ', '.join(candidate_skills)])
+                #     cosine_sim = cosine_similarity(skills_vecs[0], skills_vecs[1]).flatten()[0]
+
+                #     match_score = cosine_sim * 100
+
+                #     # Add job seeker details with match score
+                #     matched_candidates.append({
+                #         'first_name': job_seeker.user.first_name,
+                #         'last_name': job_seeker.user.last_name,
+                #         'profession': job_seeker.profession,
+                #         'score': match_score
+                #     })
 
             # Sort candidates by match score in descending order and limit to top 5
             matched_candidates = sorted(matched_candidates, key=lambda x: x['score'], reverse=True)[:5]

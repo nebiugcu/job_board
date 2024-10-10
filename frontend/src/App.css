@@ -1,1 +1,48 @@
+progress {
+  width: 100%; /* Width of the progress bar */
+  height: 12px; /* Height of the progress bar */
+  border-color: transparent;
+  appearance: none; /* Remove default styling */
+}
 
+progress::-webkit-progress-bar {
+  background-color: rgba(255, 255, 255, 0.3); /* Background color of the bar */
+  border-radius: 6px;
+}
+
+progress::-webkit-progress-value {
+  background-color: rgb(255, 255, 255); /* Color of the filled progress */
+  border-radius: 5px;
+}
+
+progress::-moz-progress-bar {
+  background-color: rgb(
+    255,
+    255,
+    255
+  ); /* Color of the filled progress for Firefox */
+  border-radius: 5px;
+}
+
+/* Affecting scroll bar for the hole page */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 0px;
+}
+
+::-webkit-scrollbar:hover {
+  width: 8px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(138, 138, 139);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(0, 41, 131);
+  border-radius: 10px;
+}

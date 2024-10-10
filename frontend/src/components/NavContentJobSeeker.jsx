@@ -36,9 +36,9 @@ const NavContentJobSeeker = ({
   };
   return (
     <>
-      <div className="flex justify-between items-center ml-6 gap-x-8">
+      <div className="flex justify-between items-center ml-20 gap-x-8">
         <div>
-          <ul className="flex justify-between gap-x-5">
+          <ul className="flex justify-between gap-x-7">
             <li>
               <Link to="/jobs">Explore Jobs</Link>
             </li>

@@ -20,11 +20,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from .models import Job
 from .forms import JobRecommendationForm
 from django.utils import timezone
-
-
-
-
 from .forms import JobSelectionForm, CandidateSelectionForm
+import spacy
+import PyPDF2
+import docx
+
+
+# Load spaCy's English model
+nlp = spacy.load('en_core_web_sm')
 
 
 
@@ -377,15 +380,49 @@ class JobRecommendationView(APIView):
         return Response(recommendations)
 
 # skill based applicant recommendation
+def extract_text_from_pdf(pdf_path):
+    text = ""
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        for page in reader.pages:
+            text += page.extract_text()
+    return text
+
+def extract_text_from_docx(docx_path):
+    doc = docx.Document(docx_path)
+    return "\n".join([para.text for para in doc.paragraphs])
+
+def extract_text_from_resume(file_path):
+    file_ext = os.path.splitext(file_path)[1].lower()
+    if file_ext == ".pdf":
+        return extract_text_from_pdf(file_path)  # You can reuse the function for PDF extraction
+    elif file_ext == ".docx":
+        return extract_text_from_docx(file_path)  # You can reuse the function for DOCX extraction
+    else:
+        return None  # Unsupported file format
+
+def extract_skills_from_text(text):
+    doc = nlp(text)
+    skills = []
+    for token in doc:
+        if token.pos_ in ['NOUN', 'PROPN']:  # Skills are often nouns/proper nouns
+            skills.append(token.text.lower())
+    return skills
 
 def calculate_skill_match(job_required_skills, applicant_skills):
+    # job_skills_set = set(job_required_skills.lower().split(', '))
+    # applicant_skills_set = set(applicant_skills.lower().split(', '))
+    # matched_skills = job_skills_set.intersection(applicant_skills_set)
     job_skills_set = set(job_required_skills.lower().split(', '))
-    applicant_skills_set = set(applicant_skills.lower().split(', '))
+    applicant_skills_set = set(applicant_skills)
     matched_skills = job_skills_set.intersection(applicant_skills_set)
     
     if len(job_skills_set) == 0:
-        return 0
-    
+        return {
+            'matched_skills': [],
+            'match_percentage': 0
+        }
+
     match_percentage = (len(matched_skills) / len(job_skills_set)) * 100
     return {
         'matched_skills': list(matched_skills),
@@ -405,23 +442,72 @@ def recommend_applicants(request, job_id):
     # Iterate through the applications and compare skills
     for application in applications:
         job_seeker = application.job_seeker
+
+        esume_skills_match = None
+        job_seeker_skills_match = None
+        
+        # Step 1: Extract and match skills from the resume
+        resume_path = application.resume.path if application.resume else job_seeker.resume.path if job_seeker.resume else None
+        if resume_path:
+            resume_text = extract_text_from_resume(resume_path)
+            if resume_text:
+                extracted_resume_skills = extract_skills_from_text(resume_text)
+                resume_skills_match = calculate_skill_match(job.required_skills, extracted_resume_skills)
+        
+        # Step 2: Match skills from the job_seeker's skills field
         if job_seeker.skills:
-            match_data = calculate_skill_match(job.required_skills, job_seeker.skills)
-            recommendations.append({
-                'job_seeker': {
-                    'first_name': job_seeker.user.first_name,
-                    'last_name': job_seeker.user.last_name,
-                    'skills': job_seeker.skills,
-                    'matched_skills': match_data['matched_skills'],
-                    'match_percentage': match_data['match_percentage']
-                },
-                'application_id': application.id,
-                'cover_letter': application.cover_letter,
+            job_seeker_skills = job_seeker.skills.lower().split(', ')
+            job_seeker_skills_match = calculate_skill_match(job.required_skills, job_seeker_skills)
+        
+        # if job_seeker.skills:
+        #     match_data = calculate_skill_match(job.required_skills, job_seeker.skills)
+        #     recommendations.append({
+        #         'job_seeker': {
+        #             'first_name': job_seeker.user.first_name,
+        #             'last_name': job_seeker.user.last_name,
+        #             'skills': job_seeker.skills,
+        #             'matched_skills': match_data['matched_skills'],
+        #             'match_percentage': match_data['match_percentage']
+        #         },
+        #         'application_id': application.id,
+        #         'cover_letter': application.cover_letter,
+        #         'resume': application.resume.url if application.resume else None
+        #     })
+        
+        # Prepare the recommendation data
+        recommendation_data = {
+            'job_seeker': {
+                'first_name': job_seeker.user.first_name,
+                'last_name': job_seeker.user.last_name,
+                'skills': job_seeker.skills,
                 'resume': application.resume.url if application.resume else None
-            })
+            },
+            'application_id': application.id,
+            'cover_letter': application.cover_letter
+        }
+
+        # Add resume skill match details if available
+        if resume_skills_match:
+            recommendation_data['resume_match'] = {
+                'matched_skills': resume_skills_match['matched_skills'],
+                'match_percentage': resume_skills_match['match_percentage']
+            }
+        
+        # Add job seeker skill field match details if available
+        if job_seeker_skills_match:
+            recommendation_data['job_seeker_match'] = {
+                'matched_skills': job_seeker_skills_match['matched_skills'],
+                'match_percentage': job_seeker_skills_match['match_percentage']
+            }
+        
+        # Append the recommendation
+        recommendations.append(recommendation_data)
     
     # Sort recommendations by match percentage in descending order
-    recommendations = sorted(recommendations, key=lambda x: x['job_seeker']['match_percentage'], reverse=True)[:5]
+    recommendations = sorted(recommendations, key=lambda x: (
+        x.get('resume_match', {}).get('match_percentage', 0),
+        x.get('job_seeker_match', {}).get('match_percentage', 0)
+    ), reverse=True)[:5]
     
     return JsonResponse(recommendations, safe=False)
 

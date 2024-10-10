@@ -30,9 +30,9 @@ const NavContentEmployer = ({ username, profile_pic, firstName, lastName }) => {
   };
   return (
     <>
-      <div className="flex justify-between items-center gap-x-80">
+      <div className="flex justify-between items-center ml-52 gap-x-8">
         <div>
-          <ul className="flex justify-between gap-x-2">
+          <ul className="flex justify-between gap-x-10">
             <li>
               <Link to="/posts">Job posts</Link>
             </li>

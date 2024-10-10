@@ -51,27 +51,33 @@ const Posts = () => {
               No Active Jobs found.
             </div>
           ) : (
-            allClientJobs.map((job, index) => {
-              return (
-                <div key={index}>
-                  <Job
-                    jobTitle={job.job_title}
-                    clientName={job.id}
-                    postedAt={job.created_at}
-                    locatedAt={job.location}
-                    jobDescription={job.job_description}
-                    jobCategory={job.job_category}
-                    jobSite={job.job_site}
-                    jobType={job.job_type}
-                    salary={job.salary}
-                    experience={job.experience_level}
-                    deadline={job.application_deadline}
-                    jobId={job.id}
-                    gender={job.applicants_needed}
-                  />
-                </div>
-              );
-            })
+            allClientJobs
+              .sort(
+                (a, b) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              )
+              .map((job, index) => {
+                return (
+                  <div key={index}>
+                    <Job
+                      jobTitle={job.job_title}
+                      clientName={job.id}
+                      postedAt={job.created_at}
+                      locatedAt={job.location}
+                      jobDescription={job.job_description}
+                      jobCategory={job.job_category}
+                      jobSite={job.job_site}
+                      jobType={job.job_type}
+                      salary={job.salary}
+                      experience={job.experience_level}
+                      deadline={job.application_deadline}
+                      jobId={job.id}
+                      gender={job.applicants_needed}
+                    />
+                  </div>
+                );
+              })
           )}
         </div>
       </div>
