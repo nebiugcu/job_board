@@ -31,7 +31,7 @@ const RecommededApplicants = () => {
             No Applicants yet for this job, to recommend!
           </div>
         ) : (
-          <div className="flex gap-5 justify-center items-center w-[90%] flex-nowrap mx-auto">
+          <div className="flex gap-x-5 gap-y-2 justify-center items-center w-[90%] flex-wrap mx-auto">
             {applicants.map((applicant, index) => {
               return (
                 <div

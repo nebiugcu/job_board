@@ -30,14 +30,6 @@ function App() {
   const [userInfo, setUserInfo] = useState(null);
   console.log("nahom7878hkkh");
   axios.defaults.withCredentials = true;
-  useEffect(() => {
-    axios
-      .get("http://localhost:8800/check")
-      .then((res) => {
-        setUserInfo(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   function RegisterAndLogout() {
     localStorage.clear();

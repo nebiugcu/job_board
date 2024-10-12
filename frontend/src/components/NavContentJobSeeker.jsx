@@ -31,8 +31,8 @@ const NavContentJobSeeker = ({
 
   const handleLogout = async () => {
     localStorage.clear();
-    navigate("/login");
     window.location.reload();
+    navigate("/login");
   };
   return (
     <>

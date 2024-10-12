@@ -66,7 +66,7 @@ const JobRecomendations = () => {
                   <span className="font-medium text-blue-800 text-lg ml-3">
                     Match Percentage
                   </span>
-                  : {job.match_percentage}
+                  : {job.match_percentage}%
                 </div>
               </div>
             </div>

@@ -59,7 +59,7 @@ const ClientSignup = () => {
     data.append("user.email", email);
     data.append("user.password", password);
     data.append("client_type", clientType);
-    data.append("profile-pic", profilePic);
+    data.append("profile_picture", profilePic);
     // api/auth/client-register
     api
       .post("/api/register/employer/", data)

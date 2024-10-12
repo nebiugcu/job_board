@@ -50,7 +50,13 @@ const Jobs = () => {
       .get("/jobs/")
       .then((res) => {
         console.log(res.data);
-        setAllJobs(res.data);
+        setAllJobs(
+          res.data.sort(
+            (a, b) =>
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+          )
+        );
         setDisplayedJobs(res.data.slice(0, displayLimit));
         setDisplayBtn(true);
       })

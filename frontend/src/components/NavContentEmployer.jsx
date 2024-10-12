@@ -25,8 +25,9 @@ const NavContentEmployer = ({ username, profile_pic, firstName, lastName }) => {
 
   const handleLogout = async () => {
     localStorage.clear();
-    navigate("/login");
     window.location.reload();
+    navigate("/login");
+    
   };
   return (
     <>
